@@ -1,16 +1,16 @@
-
-import path from "path";
-import Promise from "bluebird";
-import express from "express";
-import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
-import expressJwt, { UnauthorizedError as Jwt401Error } from "express-jwt";
-import passport from "./passport";
-import router from "./router";
-import models from "./data/models";
-import config from "./config";
-import { graphqlMiddleware, errorHandler, renderer } from "./middlewares";
-import {authRoutes} from './express/routes'
+import path from 'path';
+import Promise from 'bluebird';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
+import { graphiqlConnect } from 'apollo-server-express';
+import passport from './passport';
+import router from './router';
+import models from './data/models';
+import config from './config';
+import { graphqlMiddleware, errorHandler, renderer } from './middlewares';
+import { authRoutes } from './express/routes';
 
 const app = express();
 
@@ -19,12 +19,12 @@ const app = express();
 // user agent is not known.
 // -----------------------------------------------------------------------------
 global.navigator = global.navigator || {};
-global.navigator.userAgent = global.navigator.userAgent || "all";
+global.navigator.userAgent = global.navigator.userAgent || 'all';
 
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
-app.use(express.static(path.resolve(__dirname, "public")));
+app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -36,16 +36,16 @@ app.use(
   expressJwt({
     secret: config.auth.jwt.secret,
     credentialsRequired: false,
-    getToken: req => req.cookies.id_token
-  })
+    getToken: req => req.cookies.id_token,
+  }),
 );
 // Error handler for express-jwt
 app.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
   if (err instanceof Jwt401Error) {
-    console.error("[express-jwt-error]", req.cookies.id_token);
+    console.error('[express-jwt-error]', req.cookies.id_token);
     // `clearCookie`, otherwise user can't use web-app until cookie expires
-    res.clearCookie("id_token");
+    res.clearCookie('id_token');
   }
   next(err);
 });
@@ -53,19 +53,25 @@ app.use((err, req, res, next) => {
 app.use(passport.initialize());
 
 if (__DEV__) {
-  app.enable("trust proxy");
+  app.enable('trust proxy');
 }
 authRoutes(app);
 
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-app.use("/graphql", graphqlMiddleware);
+app.use('/graphql', graphqlMiddleware);
+app.use(
+  '/graphiql',
+  graphiqlConnect({
+    endpointURL: '/graphql',
+  }),
+);
 
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
-app.get("*", renderer);
+app.get('*', renderer);
 
 //
 // Error handling
@@ -89,7 +95,7 @@ if (!module.hot) {
 // -----------------------------------------------------------------------------
 if (module.hot) {
   app.hot = module.hot;
-  module.hot.accept("./router");
+  module.hot.accept('./router');
 }
 
 export default app;

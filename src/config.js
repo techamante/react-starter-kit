@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 /* eslint-disable max-len */
 
 if (process.env.BROWSER) {
@@ -35,7 +26,12 @@ module.exports = {
   // Web analytics
   analytics: {
     // https://analytics.google.com/
-    googleTrackingId: process.env.GOOGLE_TRACKING_ID, // UA-XXXXX-X
+    googleTrackingId: process.env.GOOGLE_TRACKING_ID, // UA-XXXXX-X,
+
+    apolloEngine: {
+      key:
+        'service:sysgears-Apollo-Universal-Starter-Kit:mZvnMtAgDE93vAtk8Cj-1Q', // Set your Apollo Engine key here
+    },
   },
 
   // Authentication

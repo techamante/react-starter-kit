@@ -1,11 +1,14 @@
-import expressGraphQL from 'express-graphql';
-import schema from '../data/schema';
+import { graphqlExpress } from "apollo-server-express";
+import schema from "../data/schema";
+import { log } from "../helpers";
 
-
-
-export default expressGraphQL(req => ({
-    schema,
-    graphiql: __DEV__,
-    rootValue: { request: req },
-    pretty: __DEV__,
-  }));
+export default graphqlExpress(async req => {
+  try {
+    return {
+      schema,
+      context: req
+    };
+  } catch (e) {
+    log(e.stack);
+  }
+});

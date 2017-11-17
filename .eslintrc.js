@@ -25,6 +25,7 @@ module.exports = {
 
   globals: {
     __DEV__: true,
+    __SERVER__: true,
   },
 
   env: {
