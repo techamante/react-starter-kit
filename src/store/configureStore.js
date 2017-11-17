@@ -10,7 +10,6 @@ export default function configureStore(initialState, config) {
 
   const middleware = [
     thunk.withExtraArgument(helpers),
-    apolloClient.middleware(),
   ];
 
   let enhancer;

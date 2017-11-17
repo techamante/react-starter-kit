@@ -6,9 +6,19 @@
     "node": ">=6.5",
     "npm": ">=3.10"
   },
-  "browserslist": [">1%", "last 4 versions", "Firefox ESR", "not ie < 9"],
+  "browserslist": [
+    ">1%",
+    "last 4 versions",
+    "Firefox ESR",
+    "not ie < 9"
+  ],
   "dependencies": {
-    "apollo-client": "^1.7.0",
+    "apollo-cache-inmemory": "1.1.1",
+    "apollo-client": "2.0.3",
+    "apollo-fetch": "0.6.0",
+    "apollo-link": "1.0.3",
+    "apollo-link-batch-http": "1.0.1",
+    "apollo-logger": "0.1.1",
     "apollo-server-express": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "bluebird": "^3.5.0",
@@ -19,9 +29,10 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.3",
     "express-jwt": "^5.3.0",
-    "graphql": "^0.10.3",
-    "graphql-tag": "^2.4.2",
+    "graphql": "^0.11.7",
+    "graphql-tag": "^2.5.0",
     "history": "^4.6.3",
+    "isomorphic-fetch": "2.2.1",
     "isomorphic-style-loader": "^4.0.0",
     "jsonwebtoken": "^7.4.1",
     "lodash": "^4.17.4",
@@ -93,6 +104,7 @@
     "mkdirp": "^0.5.1",
     "null-loader": "^0.1.1",
     "opn-cli": "^3.1.0",
+    "persistgraphql-webpack-plugin": "^0.4.4",
     "pixrem": "^4.0.1",
     "pleeease-filters": "^4.0.0",
     "postcss": "^6.0.4",
@@ -145,7 +157,9 @@
     ],
     "env": {
       "test": {
-        "plugins": ["rewire"]
+        "plugins": [
+          "rewire"
+        ]
       }
     },
     "ignore": [
@@ -157,9 +171,18 @@
     ]
   },
   "lint-staged": {
-    "*.{js,jsx}": ["eslint --fix", "git add"],
-    "*.{json,graphql}": ["prettier --write", "git add"],
-    "*.{css,less,scss,sss}": ["stylelint --fix", "git add"]
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{json,graphql}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{css,less,scss,sss}": [
+      "stylelint --fix",
+      "git add"
+    ]
   },
   "scripts": {
     "precommit": "lint-staged",

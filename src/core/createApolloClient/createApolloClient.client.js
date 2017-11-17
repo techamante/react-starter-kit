@@ -1,17 +1,44 @@
-import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { createApolloFetch } from "apollo-fetch";
+import { ApolloLink } from "apollo-link";
+import { BatchHttpLink } from "apollo-link-batch-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import url from "url";
+import { LoggingLink } from "apollo-logger";
+import createApolloClient from "./createApolloClient.common";
 
-const client = new ApolloClient({
-  networkInterface: createNetworkInterface({
-    uri: '/graphql',
-    opts: {
-      // Additional fetch options like `credentials` or `headers`
-      credentials: 'include',
-    },
-  }),
-  queryDeduplication: true,
-  reduxRootSelector: state => state.apollo,
-});
+const backendUrl =`${__BACKEND_URL__}/graphql`;
 
-export default function createApolloClient() {
+const { hostname, pathname, port } = url.parse(backendUrl);
+
+export default params => {
+  const fetch = createApolloFetch({
+    uri: hostname === "localhost" ? "/graphql" : backendUrl
+  });
+  fetch.batchUse(({ requests, options }, next) => {
+    try {
+      options.credentials = "same-origin";
+      options.headers = options.headers || {};
+    } catch (e) {
+      console.error(e);
+    }
+
+    next();
+  });
+  const cache = new InMemoryCache();
+
+  let link = new BatchHttpLink({ fetch });
+
+  const client = createApolloClient({
+    link: ApolloLink.from(
+      (true? [new LoggingLink()] : []).concat([link])
+    ),
+    cache
+  });
+  debugger;
+  if (window.App.apolloState) {
+
+    cache.restore(window.App.apolloState);
+  }
+
   return client;
-}
+};

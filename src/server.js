@@ -9,7 +9,7 @@ import passport from './passport';
 import router from './router';
 import models from './data/models';
 import config from './config';
-import { graphqlMiddleware, errorHandler, renderer } from './middlewares';
+import { graphqlMiddleware, errorHandler, renderer, persistedQueriesMiddleware } from './middlewares';
 import { authRoutes } from './express/routes';
 
 const app = express();
@@ -60,7 +60,7 @@ authRoutes(app);
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-app.use('/graphql', graphqlMiddleware);
+app.use('/graphql', persistedQueriesMiddleware, graphqlMiddleware);
 app.use(
   '/graphiql',
   graphiqlConnect({

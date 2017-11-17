@@ -18,7 +18,7 @@ import createFetch from './createFetch';
 import configureStore from './store/configureStore';
 import { updateMeta } from './DOMUtils';
 import history from './history';
-import createApolloClient from './core/createApolloClient';
+import  createApolloClient from "./core/createApolloClient/createApolloClient.client";
 import router from './router';
 
 const apolloClient = createApolloClient();

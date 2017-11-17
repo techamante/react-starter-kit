@@ -4,7 +4,8 @@ import React from "react";
 import ReactDOM from "react-dom/server";
 import { getDataFromTree } from "react-apollo";
 
-import createApolloClient from "../core/createApolloClient";
+
+import { createApolloClientServer} from "../core/createApolloClient";
 import createFetch from "../createFetch";
 import configureStore from "../store/configureStore";
 import config from "../config";
@@ -15,14 +16,12 @@ import Html from "../components/Html";
 import assets from "./assets.json"; // eslint-disable-line import/no-unresolved
 import schema from "../data/schema";
 
+
 export default async (req, res, next) => {
   try {
     const css = new Set();
 
-    const apolloClient = createApolloClient({
-      schema,
-      rootValue: { request: req }
-    });
+    const apolloClient = createApolloClientServer(req);
 
     // Universal HTTP client
     const fetch = createFetch(nodeFetch, {
@@ -90,7 +89,7 @@ export default async (req, res, next) => {
     await Promise.delay(0);
     data.children = await ReactDOM.renderToString(rootComponent);
     data.styles = [{ id: "css", cssText: [...css].join("") }];
-
+   
     data.scripts = [assets.vendor.js];
     if (route.chunks) {
       data.scripts.push(...route.chunks.map(chunk => assets[chunk].js));
@@ -104,7 +103,8 @@ export default async (req, res, next) => {
     }
     data.app = {
       apiUrl: config.api.clientUrl,
-      state: context.store.getState()
+      state: context.store.getState(),
+      apolloState: apolloClient.cache.extract()
     };
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
@@ -114,3 +114,4 @@ export default async (req, res, next) => {
     next(err);
   }
 };
+

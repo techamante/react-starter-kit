@@ -1,47 +1,42 @@
-import { validate, execute, specifiedRules } from 'graphql';
+import 'isomorphic-fetch';
+import { createApolloFetch } from "apollo-fetch";
+import { ApolloLink } from "apollo-link";
+import { BatchHttpLink } from "apollo-link-batch-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import url from "url";
+import createApolloClient from "./createApolloClient.common";
+import { LoggingLink } from "apollo-logger";
+import config from "../../config";
 
-import ApolloClient from 'apollo-client';
+const { protocol, hostname, port, pathname } = url.parse(__BACKEND_URL__);
+const apiUrl = `${protocol}//${hostname}:${process.env.PORT || port}${pathname}`;
 
-// Execute all GraphQL requests directly without
-class ServerInterface {
-  constructor(optionsData) {
-    this.schema = optionsData.schema;
-    this.optionsData = optionsData;
-  }
 
-  async query({ query, variables, operationName }) {
+export default (req ) => {
+  const fetch = createApolloFetch({
+    uri:apiUrl
+  })
+
+  fetch.batchUse(({ options }, next) => {
     try {
-      let validationRules = specifiedRules;
-      const customValidationRules = this.optionsData.validationRules;
-      if (customValidationRules) {
-        validationRules = validationRules.concat(customValidationRules);
-      }
-
-      const validationErrors = validate(this.schema, query, validationRules);
-      if (validationErrors.length > 0) {
-        return { errors: validationErrors };
-      }
-
-      const result = await execute(
-        this.schema,
-        query,
-        this.optionsData.rootValue,
-        this.optionsData.context,
-        variables,
-        operationName,
-      );
-
-      return result;
-    } catch (contextError) {
-      return { errors: [contextError] };
+      options.credentials = "include";
+      options.headers= req.headers
+    } catch (e) {
+      console.error(e);
     }
-  }
-}
 
-export default function createApolloClient(options) {
-  return new ApolloClient({
-    reduxRootSelector: state => state.apollo,
-    networkInterface: new ServerInterface(options),
-    queryDeduplication: true,
+    next();
   });
-}
+  const cache = new InMemoryCache();
+
+  let link = new BatchHttpLink({ fetch });
+
+  const client = createApolloClient({
+    link: ApolloLink.from(
+      (config.logging ? [new LoggingLink()] : []).concat([link])
+    ),
+    cache
+  });
+
+  return client;
+};
