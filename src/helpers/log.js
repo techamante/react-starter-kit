@@ -1,19 +1,19 @@
-import minilog from "minilog";
+import minilog from 'minilog';
 
 minilog.enable();
 
 const log =
-  typeof window !== "undefined" ? minilog("frontend") : minilog("backend");
+  typeof window !== 'undefined' ? minilog('frontend') : minilog('backend');
 
 if (__DEV__ && __SERVER__) {
-  let console_log = global.console.log;
+  const console_log = global.console.log;
   global.console.log = function() {
     if (
       arguments.length == 1 &&
-      typeof arguments[0] === "string" &&
+      typeof arguments[0] === 'string' &&
       arguments[0].match(/^\[(HMR|WDS)\]/)
     ) {
-      console_log("backend " + arguments[0]);
+      console_log(`backend ${arguments[0]}`);
     } else {
       console_log.apply(console_log, arguments);
     }
