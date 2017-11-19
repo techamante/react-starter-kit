@@ -12,8 +12,21 @@ import {
   GraphQLObjectType as ObjectType,
 } from 'graphql';
 
+import {
+  makeExecutableSchema,
+  addMockFunctionsToSchema,
+  mergeSchemas,
+} from 'graphql-tools';
+
 import me from './queries/me';
 import news from './queries/news';
+import CourseType from './types/CourseType.graphql';
+
+const apolloSchema = makeExecutableSchema({
+  typeDefs: CourseType,
+});
+
+addMockFunctionsToSchema({ schema: apolloSchema });
 
 const schema = new Schema({
   query: new ObjectType({
@@ -25,4 +38,6 @@ const schema = new Schema({
   }),
 });
 
-export default schema;
+export default mergeSchemas({
+  schemas: [apolloSchema, schema],
+});

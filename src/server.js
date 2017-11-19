@@ -9,7 +9,13 @@ import passport from './passport';
 import router from './router';
 import models from './data/models';
 import config from './config';
-import { graphqlMiddleware, errorHandler, renderer, persistedQueriesMiddleware } from './middlewares';
+import {
+  graphqlMiddleware,
+  errorHandler,
+  renderer,
+  persistedQueriesMiddleware,
+  createApolloEngineMiddleware,
+} from './middlewares';
 import { authRoutes } from './express/routes';
 
 const app = express();
@@ -24,6 +30,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
+app.use(createApolloEngineMiddleware());
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
