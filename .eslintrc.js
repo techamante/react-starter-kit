@@ -26,6 +26,9 @@ module.exports = {
   globals: {
     __DEV__: true,
     __SERVER__: true,
+    __BACKEND_URL__: true,
+    __SSR__: true,
+    __CLIENT__: true,
   },
 
   env: {
@@ -44,6 +47,8 @@ module.exports = {
         mjs: 'never',
       },
     ],
+
+    'linebreak-style': ['error', 'windows'],
 
     // Not supporting nested package.json yet
     // https://github.com/benmosher/eslint-plugin-import/issues/458

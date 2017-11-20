@@ -1,12 +1,12 @@
 import { graphqlExpress } from 'apollo-server-express';
-import { invert, isArray } from 'lodash';
+// import { invert } from 'lodash';
 
 import schema from '../data/schema';
 import { log } from '../helpers';
-import queryMap from 'persisted_queries.json';
-import { graphQL } from '../config';
+// import queryMap from 'persisted_queries.json';
+// import { graphQL } from '../config';
 
-export default graphqlExpress(async req => {
+export default graphqlExpress(req => {
   try {
     return {
       schema,
@@ -16,12 +16,10 @@ export default graphqlExpress(async req => {
     };
   } catch (e) {
     log(e.stack);
+    return null;
   }
 });
 
-console.log(queryMap);
-
-const invertedMap = invert(queryMap);
 export const persistedQueriesMiddleware = (req, resp, next) => {
   next();
 

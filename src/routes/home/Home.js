@@ -28,10 +28,6 @@ class Home extends React.Component {
     }).isRequired,
   };
 
-  componentWillMount(){
-    console.log("componentWillMount");
-  }
-
   render() {
     const { data: { loading, news } } = this.props;
     return (
@@ -40,20 +36,18 @@ class Home extends React.Component {
           <h1>React.js News</h1>
           {loading
             ? 'Loading...'
-            : news.map(item =>
+            : news.map(item => (
                 <article key={item.link} className={s.newsItem}>
                   <h1 className={s.newsTitle}>
-                    <a href={item.link}>
-                      {item.title}
-                    </a>
+                    <a href={item.link}>{item.title}</a>
                   </h1>
                   <div
                     className={s.newsDesc}
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: item.content }}
                   />
-                </article>,
-              )}
+                </article>
+              ))}
         </div>
       </div>
     );

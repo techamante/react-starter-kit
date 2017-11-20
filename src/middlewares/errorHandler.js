@@ -1,14 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/server";
-import PrettyError from "pretty-error";
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+import PrettyError from 'pretty-error';
 
-import Html from "../components/Html";
-import { ErrorPageWithoutStyle } from "../routes/error/ErrorPage";
-import errorPageStyle from "../routes/error/ErrorPage.css";
+import Html from '../components/Html';
+import { ErrorPageWithoutStyle } from '../routes/error/ErrorPage';
+import errorPageStyle from '../routes/error/ErrorPage.css';
 
 const pe = new PrettyError();
 pe.skipNodeFiles();
-pe.skipPackage("express");
+pe.skipPackage('express');
 
 // eslint-disable-next-line no-unused-vars
 export default (err, req, res, next) => {
@@ -17,10 +17,10 @@ export default (err, req, res, next) => {
     <Html
       title="Internal Server Error"
       description={err.message}
-      styles={[{ id: "css", cssText: errorPageStyle._getCss() }]} // eslint-disable-line no-underscore-dangle
+      styles={[{ id: 'css', cssText: errorPageStyle._getCss() }]} // eslint-disable-line no-underscore-dangle
     >
       {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
-    </Html>
+    </Html>,
   );
   res.status(err.status || 500);
   res.send(`<!doctype html>${html}`);

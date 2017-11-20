@@ -6,8 +6,9 @@ export default () => {
   let engine;
   if (config.analytics.apolloEngine.key) {
     const { protocol, hostname, port, pathname } = url.parse(__BACKEND_URL__);
-    const apiUrl = `${protocol}//${hostname}:${process.env.PORT ||
-      port}${pathname}`;
+    const apiUrl = `${protocol}//${hostname}:${process.env.PORT || port}${
+      pathname
+    }`;
     const serverPort = process.env.PORT || port;
 
     engine = new Engine({

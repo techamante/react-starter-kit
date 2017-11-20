@@ -1,12 +1,10 @@
 import path from 'path';
-import Promise from 'bluebird';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphiqlConnect } from 'apollo-server-express';
 import passport from './passport';
-import router from './router';
 import models from './data/models';
 import config from './config';
 import {
@@ -16,7 +14,7 @@ import {
   persistedQueriesMiddleware,
   createApolloEngineMiddleware,
 } from './middlewares';
-import { authRoutes } from './express/routes';
+import authRoutes from './express/routes/authRoutes';
 
 const app = express();
 

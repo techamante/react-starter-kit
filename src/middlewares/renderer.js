@@ -1,21 +1,20 @@
-import Promise from "bluebird";
-import nodeFetch from "node-fetch";
-import React from "react";
-import ReactDOM from "react-dom/server";
-import { getDataFromTree } from "react-apollo";
+// @flow
 
+import Promise from 'bluebird';
+import nodeFetch from 'node-fetch';
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+import { getDataFromTree } from 'react-apollo';
 
-import { createApolloClientServer} from "../core/createApolloClient";
-import createFetch from "../createFetch";
-import configureStore from "../store/configureStore";
-import config from "../config";
-import { setRuntimeVariable } from "../actions/runtime";
-import router from "../router";
-import App from "../components/App";
-import Html from "../components/Html";
-import assets from "./assets.json"; // eslint-disable-line import/no-unresolved
-import schema from "../data/schema";
-
+import { createApolloClientServer } from '../core/createApolloClient';
+import createFetch from '../createFetch';
+import configureStore from '../store/configureStore';
+import config from '../config';
+import { setRuntimeVariable } from '../actions/runtime';
+import router from '../router';
+import App from '../components/App';
+import Html from '../components/Html';
+import assets from './assets.json'; // eslint-disable-line import/no-unresolved
 
 export default async (req, res, next) => {
   try {
@@ -27,11 +26,11 @@ export default async (req, res, next) => {
     const fetch = createFetch(nodeFetch, {
       baseUrl: config.api.serverUrl,
       cookie: req.headers.cookie,
-      apolloClient
+      apolloClient,
     });
 
     const initialState = {
-      user: req.user || null
+      user: req.user || null,
     };
 
     const store = configureStore(initialState, {
@@ -39,14 +38,14 @@ export default async (req, res, next) => {
       apolloClient,
       fetch,
       // I should not use `history` on server.. but how I do redirection? follow universal-router
-      history: null
+      history: null,
     });
 
     store.dispatch(
       setRuntimeVariable({
-        name: "initialNow",
-        value: Date.now()
-      })
+        name: 'initialNow',
+        value: Date.now(),
+      }),
     );
 
     // Global (context) variables that can be easily accessed from any React component
@@ -63,13 +62,13 @@ export default async (req, res, next) => {
       store,
       storeSubscription: null,
       // Apollo Client for use with react-apollo
-      client: apolloClient
+      client: apolloClient,
     };
 
     const route = await router.resolve({
       ...context,
       path: req.path,
-      query: req.query
+      query: req.query,
     });
 
     if (route.redirect) {
@@ -88,8 +87,8 @@ export default async (req, res, next) => {
     // this is here because of Apollo redux APOLLO_QUERY_STOP action
     await Promise.delay(0);
     data.children = await ReactDOM.renderToString(rootComponent);
-    data.styles = [{ id: "css", cssText: [...css].join("") }];
-   
+    data.styles = [{ id: 'css', cssText: [...css].join('') }];
+
     data.scripts = [assets.vendor.js];
     if (route.chunks) {
       data.scripts.push(...route.chunks.map(chunk => assets[chunk].js));
@@ -99,12 +98,12 @@ export default async (req, res, next) => {
     // Furthermore invoked actions will be ignored, client will not receive them!
     if (__DEV__) {
       // eslint-disable-next-line no-console
-      console.log("Serializing store...");
+      console.log('Serializing store...');
     }
     data.app = {
       apiUrl: config.api.clientUrl,
       state: context.store.getState(),
-      apolloState: apolloClient.cache.extract()
+      apolloState: apolloClient.cache.extract(),
     };
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
@@ -114,4 +113,3 @@ export default async (req, res, next) => {
     next(err);
   }
 };
-

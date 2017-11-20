@@ -8,9 +8,7 @@ export default function configureStore(initialState, config) {
   const helpers = createHelpers(config);
   const { apolloClient } = config;
 
-  const middleware = [
-    thunk.withExtraArgument(helpers),
-  ];
+  const middleware = [thunk.withExtraArgument(helpers)];
 
   let enhancer;
 

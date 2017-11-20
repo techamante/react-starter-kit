@@ -1,23 +1,24 @@
-import { createApolloFetch } from "apollo-fetch";
-import { ApolloLink } from "apollo-link";
-import { BatchHttpLink } from "apollo-link-batch-http";
+import { createApolloFetch } from 'apollo-fetch';
+import { ApolloLink } from 'apollo-link';
+import { BatchHttpLink } from 'apollo-link-batch-http';
+//eslint-disable-next-line
 import { InMemoryCache } from "apollo-cache-inmemory";
-import url from "url";
-import { LoggingLink } from "apollo-logger";
-import createApolloClient from "./createApolloClient.common";
+import url from 'url';
+import { LoggingLink } from 'apollo-logger';
+import createApolloClient from './createApolloClient.common';
 
-const backendUrl =`${__BACKEND_URL__}/graphql`;
+const backendUrl = `${__BACKEND_URL__}/graphql`;
 
-const { hostname, pathname, port } = url.parse(backendUrl);
+const { hostname } = url.parse(backendUrl);
 
-export default params => {
+export default () => {
   const fetch = createApolloFetch({
-    uri: hostname === "localhost" ? "/graphql" : backendUrl
+    uri: hostname === 'localhost' ? '/graphql' : backendUrl,
   });
-  fetch.batchUse(({ requests, options }, next) => {
+  fetch.batchUse(({ options }, next) => {
     try {
-      options.credentials = "same-origin";
-      options.headers = options.headers || {};
+      options.credentials = 'same-origin'; // eslint-disable-line no-param-reassign
+      options.headers = options.headers || {}; // eslint-disable-line no-param-reassign
     } catch (e) {
       console.error(e);
     }
@@ -26,17 +27,14 @@ export default params => {
   });
   const cache = new InMemoryCache();
 
-  let link = new BatchHttpLink({ fetch });
+  const link = new BatchHttpLink({ fetch });
 
   const client = createApolloClient({
-    link: ApolloLink.from(
-      (true? [new LoggingLink()] : []).concat([link])
-    ),
-    cache
+    link: ApolloLink.from((true ? [new LoggingLink()] : []).concat([link])),
+    cache,
   });
-  debugger;
-  if (window.App.apolloState) {
 
+  if (window.App.apolloState) {
     cache.restore(window.App.apolloState);
   }
 

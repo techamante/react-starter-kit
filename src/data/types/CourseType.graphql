@@ -12,7 +12,7 @@ type ApplicationUser {
   phone: Int
   isBusinessAccountUser: Boolean!
   isBusinessAccountAdmin: Boolean!
-  #All affiliated organizations
+  # All affiliated organizations
   organizations: [Organization]
 }
 

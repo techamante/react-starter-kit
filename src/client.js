@@ -18,7 +18,7 @@ import createFetch from './createFetch';
 import configureStore from './store/configureStore';
 import { updateMeta } from './DOMUtils';
 import history from './history';
-import  createApolloClient from "./core/createApolloClient/createApolloClient.client";
+import createApolloClient from './core/createApolloClient/createApolloClient.client';
 import router from './router';
 
 const apolloClient = createApolloClient();
@@ -139,9 +139,7 @@ async function onLocationChange(location, action) {
     }
 
     appInstance = ReactDOM.render(
-      <App context={context}>
-        {route.component}
-      </App>,
+      <App context={context}>{route.component}</App>,
       container,
       () => onRenderComplete(route, location),
     );

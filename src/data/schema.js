@@ -16,16 +16,22 @@ import {
   makeExecutableSchema,
   addMockFunctionsToSchema,
   mergeSchemas,
+  addErrorLoggingToSchema,
 } from 'graphql-tools';
+
+import { log, pubsub } from '../helpers';
 
 import me from './queries/me';
 import news from './queries/news';
 import CourseType from './types/CourseType.graphql';
+import CourseTypeResolvers from './types/CourseType';
 
 const apolloSchema = makeExecutableSchema({
   typeDefs: CourseType,
+  resolvers: CourseTypeResolvers(pubsub),
 });
 
+addErrorLoggingToSchema(apolloSchema, { log: e => log.error(e) });
 addMockFunctionsToSchema({ schema: apolloSchema });
 
 const schema = new Schema({
