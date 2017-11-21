@@ -18,26 +18,16 @@ import {
   addErrorLoggingToSchema,
 } from 'graphql-tools';
 
-import { log, pubsub } from '../helpers';
-
-import me from './sample/me';
-import news from './sample/news';
-
-import { SharedTypes } from './shared';
+import modules from '../../modules';
+import { log } from '../../helpers';
+import pubsub from './pubsub';
 import RootSchema from './rootSchema.graphql';
-import { TrubysSchema, TrubysTypes } from './trubys';
-import { AuthSchema, AuthTypes, resolvers } from './auth';
+import me from '../../modules/sample/me';
+import news from '../../modules/sample/news';
 
 const trubysSchema = makeExecutableSchema({
-  typeDefs: [
-    RootSchema,
-    AuthSchema,
-    TrubysSchema,
-    SharedTypes,
-    AuthTypes,
-    TrubysTypes,
-  ],
-  resolvers: resolvers(pubsub),
+  typeDefs: [RootSchema, ...modules.schemas],
+  resolvers: modules.createResolvers(pubsub),
 });
 
 addErrorLoggingToSchema(trubysSchema, { log: e => log.error(e) });

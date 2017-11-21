@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import config from '../config';
-import { FieldError } from '../data/shared/';
-import { seed as users } from '../data/auth';
+import { FieldError } from '../modules/shared/';
+import { seed as users } from '../modules/auth';
 
 export const createTokens = async (user, secret, refreshSecret) => {
   const tokenUser = _.pick(user, ['id', 'username', 'role']);

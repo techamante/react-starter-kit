@@ -18,7 +18,7 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import _ from 'lodash';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
-import { seed as users } from '../data/auth';
+import { seed as users } from '../modules/auth';
 
 import config from '../config';
 
