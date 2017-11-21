@@ -314,7 +314,7 @@ const clientConfig = {
   target: 'web',
 
   entry: {
-    client: ['babel-polyfill', './src/client.js'],
+    client: ['babel-polyfill', './src/client/client.js'],
   },
 
   plugins: [
@@ -401,7 +401,7 @@ const serverConfig = {
   target: 'node',
 
   entry: {
-    server: ['babel-polyfill', './src/server.js'],
+    server: ['babel-polyfill', './src/server/server.js'],
   },
 
   output: {

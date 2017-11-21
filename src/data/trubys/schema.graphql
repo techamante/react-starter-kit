@@ -1,0 +1,7 @@
+extend type Query {
+  curriculumById(id: ID!): Curriculum
+}
+
+extend type Mutation {
+  registerCourse(courseId: ID!): Course
+}

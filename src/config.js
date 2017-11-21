@@ -22,6 +22,9 @@ export default {
       `http://localhost:${process.env.PORT || 3000}`,
   },
 
+  mongoURI:
+    'mongodb://anujmalla:password@ds259305.mlab.com:59305/pq-emaily-dev',
+
   // GraphQL
 
   graphQL: {

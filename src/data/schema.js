@@ -14,26 +14,35 @@ import {
 
 import {
   makeExecutableSchema,
-  addMockFunctionsToSchema,
   mergeSchemas,
   addErrorLoggingToSchema,
 } from 'graphql-tools';
 
 import { log, pubsub } from '../helpers';
 
-import me from './queries/me';
-import news from './queries/news';
-import CourseType from './types/CourseType.graphql';
-import CourseTypeResolvers from './types/CourseType';
+import me from './sample/me';
+import news from './sample/news';
 
-const apolloSchema = makeExecutableSchema({
-  typeDefs: CourseType,
-  resolvers: CourseTypeResolvers(pubsub),
+import { SharedTypes } from './shared';
+import RootSchema from './rootSchema.graphql';
+import { TrubysSchema, TrubysTypes } from './trubys';
+import { AuthSchema, AuthTypes, resolvers } from './auth';
+
+const trubysSchema = makeExecutableSchema({
+  typeDefs: [
+    RootSchema,
+    AuthSchema,
+    TrubysSchema,
+    SharedTypes,
+    AuthTypes,
+    TrubysTypes,
+  ],
+  resolvers: resolvers(pubsub),
 });
 
-addErrorLoggingToSchema(apolloSchema, { log: e => log.error(e) });
-addMockFunctionsToSchema({ schema: apolloSchema });
-
+addErrorLoggingToSchema(trubysSchema, { log: e => log.error(e) });
+// addMockFunctionsToSchema({ schema: apolloSchema });
+// addMockFunctionsToSchema({ schema: authSchema });
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',
@@ -45,5 +54,5 @@ const schema = new Schema({
 });
 
 export default mergeSchemas({
-  schemas: [apolloSchema, schema],
+  schemas: [trubysSchema, schema],
 });

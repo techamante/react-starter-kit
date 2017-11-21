@@ -1,0 +1,2 @@
+import './Curriculum';
+import './Course';

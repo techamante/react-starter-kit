@@ -231,7 +231,7 @@ async function start() {
     browserSync.create().init(
       {
         // https://www.browsersync.io/docs/options
-        server: 'src/server.js',
+        server: 'src/server/server.js',
         middleware: [server],
         open: !process.argv.includes('--silent'),
         ...(isDebug ? {} : { notify: false, ui: false }),
