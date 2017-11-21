@@ -3,5 +3,5 @@ extend type Query {
 }
 
 extend type Mutation {
-  registerCourse(courseId: ID!): Course
+  addCourse(curriculumId: ID, courseId: ID): Curriculum
 }

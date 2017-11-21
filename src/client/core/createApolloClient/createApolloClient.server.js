@@ -2,7 +2,7 @@ import 'isomorphic-fetch';
 import { createApolloFetch } from 'apollo-fetch';
 import { ApolloLink } from 'apollo-link';
 import { BatchHttpLink } from 'apollo-link-batch-http';
-//eslint-disable-next-line
+// eslint-disable-next-line
 import { InMemoryCache } from "apollo-cache-inmemory";
 import url from 'url';
 import { LoggingLink } from 'apollo-logger';

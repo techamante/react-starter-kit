@@ -1,11 +1,12 @@
-import mongoose from 'mongoose';
+import { Model } from 'mongoose-model-decorators';
+
 import TrainingVideoSchema from './TrainingVideo';
 
-const { Schema } = mongoose;
-const courseScheme = new Schema({
-  title: String,
-  description: String,
-  videos: [TrainingVideoSchema],
-});
-
-export default mongoose.model('courses', courseScheme);
+@Model('courses')
+export default class Course {
+  static schema = {
+    title: String,
+    description: String,
+    videos: [TrainingVideoSchema],
+  };
+}
