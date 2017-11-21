@@ -31,8 +31,7 @@ const trubysSchema = makeExecutableSchema({
 });
 
 addErrorLoggingToSchema(trubysSchema, { log: e => log.error(e) });
-// addMockFunctionsToSchema({ schema: apolloSchema });
-// addMockFunctionsToSchema({ schema: authSchema });
+
 const schema = new Schema({
   query: new ObjectType({
     name: 'Query',

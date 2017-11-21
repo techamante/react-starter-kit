@@ -22,7 +22,7 @@ let lastFetchTime = new Date(1970, 0, 1);
 
 const news = {
   type: new List(NewsItemType),
-  resolve() {
+  resolve(obj, args, context) {
     if (lastFetchTask) {
       return lastFetchTask;
     }

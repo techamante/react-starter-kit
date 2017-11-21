@@ -3,7 +3,17 @@
 import type { DocumentNode } from 'graphql';
 import type { Middleware, $Request } from 'express';
 
-import { merge, map, union, without, castArray, concat } from 'lodash';
+import {
+  merge,
+  map,
+  union,
+  without,
+  castArray,
+  concat,
+  reduce,
+  pluck,
+  assignIn,
+} from 'lodash';
 
 import log from '../helpers/log';
 
@@ -17,6 +27,7 @@ type FeatureParams = {
   beforeware?: Middleware | Middleware[],
   middleware?: Middleware | Middleware[],
   createFetchOptions?: Function | Function[],
+  creatModelFunc?: Function | Function[],
 };
 
 class Feature {

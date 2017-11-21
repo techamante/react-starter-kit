@@ -8,4 +8,4 @@ const courseScheme = new Schema({
   videos: [TrainingVideoSchema],
 });
 
-mongoose.model('courses', courseScheme);
+export default mongoose.model('courses', courseScheme);

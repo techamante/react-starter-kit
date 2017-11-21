@@ -5,12 +5,13 @@ import schema from '../graphql/schema';
 import { log } from '../../helpers';
 // import queryMap from 'persisted_queries.json';
 // import { graphQL } from '../config';
+import modules from '../../modules';
 
 export default graphqlExpress(async req => {
   try {
     return {
       schema,
-      context: req,
+      context: await modules.createContext(req),
       tracing: true,
       cacheControl: true,
     };

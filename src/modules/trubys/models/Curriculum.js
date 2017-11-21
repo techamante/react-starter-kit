@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const curriculumSchema = new Schema({
   title: String,
   description: String,
-  courses: [CurriculumCourseSchema],
+  courses: [{ type: Schema.Types.ObjectId, ref: 'courses' }],
 });
 
-mongoose.model('Curriculums', curriculumSchema);
+export default mongoose.model('curriculums', curriculumSchema);

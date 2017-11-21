@@ -6,12 +6,7 @@
     "node": ">=6.5",
     "npm": ">=3.10"
   },
-  "browserslist": [
-    ">1%",
-    "last 4 versions",
-    "Firefox ESR",
-    "not ie < 9"
-  ],
+  "browserslist": [">1%", "last 4 versions", "Firefox ESR", "not ie < 9"],
   "dependencies": {
     "apollo-cache-inmemory": "1.1.1",
     "apollo-client": "2.0.3",
@@ -44,6 +39,7 @@
     "lodash": "^4.17.4",
     "minilog": "^3.1.0",
     "mongoose": "^4.13.4",
+    "mongoose-data-seed": "^1.0.2",
     "node-fetch": "^1.7.1",
     "normalize.css": "^7.0.0",
     "passport": "^0.4.0",
@@ -167,9 +163,7 @@
     ],
     "env": {
       "test": {
-        "plugins": [
-          "rewire"
-        ]
+        "plugins": ["rewire"]
       }
     },
     "ignore": [
@@ -181,18 +175,9 @@
     ]
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{json,graphql}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{css,less,scss,sss}": [
-      "stylelint --fix",
-      "git add"
-    ]
+    "*.{js,jsx}": ["eslint --fix", "git add"],
+    "*.{json,graphql}": ["prettier --write", "git add"],
+    "*.{css,less,scss,sss}": ["stylelint --fix", "git add"]
   },
   "scripts": {
     "precommit": "lint-staged",
@@ -215,6 +200,7 @@
     "render": "babel-node tools/run render",
     "serve": "babel-node tools/run runServer",
     "start": "babel-node tools/run start",
-    "debug": "babel-node --inspect tools/run start"
+    "debug": "babel-node --inspect tools/run start",
+    "seed": "md-seed run"
   }
 }
