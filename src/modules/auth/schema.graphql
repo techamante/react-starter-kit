@@ -51,7 +51,7 @@ input RegisterUserInput {
 }
 
 input LoginUserInput {
-  email: String!
+  username: String!
   password: String!
 }
 

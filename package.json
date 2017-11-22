@@ -6,12 +6,7 @@
     "node": ">=6.5",
     "npm": ">=3.10"
   },
-  "browserslist": [
-    ">1%",
-    "last 4 versions",
-    "Firefox ESR",
-    "not ie < 9"
-  ],
+  "browserslist": [">1%", "last 4 versions", "Firefox ESR", "not ie < 9"],
   "dependencies": {
     "apollo-cache-inmemory": "1.1.1",
     "apollo-client": "2.0.3",
@@ -28,6 +23,7 @@
     "body-parser": "^1.17.2",
     "classnames": "^2.2.5",
     "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.3",
     "core-js": "^2.4.1",
     "dotenv": "^4.0.0",
     "express": "^4.15.3",
@@ -51,6 +47,7 @@
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-jwt": "^3.0.1",
+    "passport-local": "^1.0.0",
     "prettier-eslint": "^8.2.2",
     "pretty-error": "^2.1.1",
     "prop-types": "^15.5.10",
@@ -170,9 +167,7 @@
     ],
     "env": {
       "test": {
-        "plugins": [
-          "rewire"
-        ]
+        "plugins": ["rewire"]
       }
     },
     "ignore": [
@@ -184,18 +179,9 @@
     ]
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{json,graphql}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{css,less,scss,sss}": [
-      "stylelint --fix",
-      "git add"
-    ]
+    "*.{js,jsx}": ["eslint --fix", "git add"],
+    "*.{json,graphql}": ["prettier --write", "git add"],
+    "*.{css,less,scss,sss}": ["stylelint --fix", "git add"]
   },
   "scripts": {
     "precommit": "lint-staged",

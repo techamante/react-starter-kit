@@ -9,9 +9,13 @@ import modules from '../../modules';
 
 export default graphqlExpress(async req => {
   try {
+    const ctx = await modules.createContext(req);
     return {
       schema,
-      context: await modules.createContext(req),
+      context: {
+        req,
+        ...ctx,
+      },
       tracing: true,
       cacheControl: true,
     };

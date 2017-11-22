@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphiqlConnect } from 'apollo-server-express';
 import mongoose from 'mongoose';
+import cookieSession from 'cookie-session';
 import passport from '../services/passport';
 import config from '../config';
 import {
@@ -35,7 +36,12 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: ['Test@222'],
+  }),
+);
 //
 // Authentication
 // -----------------------------------------------------------------------------
@@ -58,6 +64,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use(passport.initialize());
+app.use(passport.session());
 
 if (__DEV__) {
   app.enable('trust proxy');
