@@ -44,9 +44,52 @@ export default {
     },
   },
 
+  providers: {
+    google: {
+      credentials: {
+        clientID:
+          '207707901314-0hlvtbmjdk5eqjn5qm71t92u0vdu2mru.apps.googleusercontent.com',
+        clientSecret: 'tQGFkecQeQ4K7pW8_Fen6N2G',
+      },
+      options: {
+        scope: ['profile', 'email'],
+      },
+    },
+    facebook: {
+      credentials: {
+        clientID: '1881281178855983',
+        clientSecret: '6f3024813f176329d38ef6ea4c15aa95',
+        profileURL: 'https://graph.facebook.com/v2.4/me',
+        profileFields: [
+          'id',
+          'name',
+          'displayName',
+          'emails',
+          'age_range',
+          'link',
+          'gender',
+          'locale',
+          'timezone',
+          'updated_time',
+          'verified',
+          'picture',
+          'cover',
+        ],
+      },
+      options: {
+        scope: ['email', 'public_profile'],
+        display: 'popup',
+      },
+    },
+  },
+
   // Authentication
   auth: {
-    jwt: { secret: process.env.JWT_SECRET || 'React Starter Kit' },
+    jwt: {
+      secretOrKey: process.env.JWT_SECRET || 'React Starter Kit',
+      issuer: 'purplequantum',
+      audience: 'yoursite',
+    },
 
     // https://developers.facebook.com/
     facebook: {

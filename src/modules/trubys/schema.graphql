@@ -1,7 +1,0 @@
-extend type Query {
-  curriculumById(id: ID!): Curriculum
-}
-
-extend type Mutation {
-  addCourse(curriculumId: ID, courseId: ID): Curriculum
-}
