@@ -18,12 +18,12 @@ import {
   addErrorLoggingToSchema,
 } from 'graphql-tools';
 
-import modules from '../../modules';
-import { log } from '../../helpers';
+import modules from '../modules';
+import { log } from '../helpers';
 import pubsub from './pubsub';
 import RootSchema from './rootSchema.graphql';
-import me from '../../modules/sample/me';
-import news from '../../modules/sample/news';
+import me from '../modules/sample/me';
+import news from '../modules/sample/news';
 
 const trubysSchema = makeExecutableSchema({
   typeDefs: [RootSchema, ...modules.schemas],

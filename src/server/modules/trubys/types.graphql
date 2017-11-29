@@ -1,0 +1,21 @@
+type Curriculum {
+  id: ID!
+  title: String!
+  description: String!
+  courses: [Course]
+}
+
+type Course {
+  id: ID!
+  title: String!
+  description: String!
+  videos: [TrainingVideo]
+}
+
+type TrainingVideo {
+  id: ID!
+  title: String!
+  description: String!
+  videoUrl: String!
+  videoContentType: String!
+}

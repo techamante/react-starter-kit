@@ -2,10 +2,10 @@ import { graphqlExpress } from 'apollo-server-express';
 // import { invert } from 'lodash';
 
 import schema from '../graphql/schema';
-import { log } from '../../helpers';
+import { log } from '../helpers';
 // import queryMap from 'persisted_queries.json';
 // import { graphQL } from '../config';
-import modules from '../../modules';
+import modules from '../modules';
 
 export default graphqlExpress(async req => {
   try {

@@ -1,21 +1,22 @@
 import path from 'path';
 import express from 'express';
-import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphiqlConnect } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import cookieSession from 'cookie-session';
-import passport from '../services/passport';
+import cookiesMiddleware from 'universal-cookie-express';
+import passport from 'passport';
+import GoogleStrategy from 'passport-google-oauth20';
+import FacebookStrategy from 'passport-facebook';
 import config from '../config';
 import {
   graphqlMiddleware,
-  errorHandler,
-  renderer,
   persistedQueriesMiddleware,
   createApolloEngineMiddleware,
-} from './middlewares';
-import authRoutes from './routes/authRoutes';
+} from './graphql';
+
+import { errorHandler, renderer } from './middlewares';
+// import authRoutes from './routes/authRoutes';
+import SuperLogin from './modules/auth/services';
 
 mongoose.connect(config.mongoURI);
 
@@ -29,58 +30,50 @@ global.navigator = global.navigator || {};
 global.navigator.userAgent = global.navigator.userAgent || 'all';
 
 //
-// Register Node.js middleware
+// Setup Express Pipeline
 // -----------------------------------------------------------------------------
 app.use(createApolloEngineMiddleware());
 app.use(express.static(path.resolve(__dirname, 'public')));
-app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: ['Test@222'],
-  }),
-);
+app.use(cookiesMiddleware());
+
 //
 // Authentication
 // -----------------------------------------------------------------------------
-app.use(
-  expressJwt({
-    secret: config.auth.jwt.secret,
-    credentialsRequired: false,
-    getToken: req => req.cookies.id_token,
-  }),
-);
-// Error handler for express-jwt
-app.use((err, req, res, next) => {
-  // eslint-disable-line no-unused-vars
-  if (err instanceof Jwt401Error) {
-    console.error('[express-jwt-error]', req.cookies.id_token);
-    // `clearCookie`, otherwise user can't use web-app until cookie expires
-    res.clearCookie('id_token');
-  }
-  next(err);
-});
-
 app.use(passport.initialize());
-app.use(passport.session());
+const superLogin = SuperLogin();
+superLogin.registerOAuth2('google', GoogleStrategy);
+superLogin.registerOAuth2('facebook', FacebookStrategy);
+app.use('/auth', superLogin.router);
 
 if (__DEV__) {
   app.enable('trust proxy');
 }
-authRoutes(app);
 
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-app.use('/graphql', persistedQueriesMiddleware, graphqlMiddleware);
+app.use(
+  '/graphql',
+  superLogin.authenticate,
+  persistedQueriesMiddleware,
+  graphqlMiddleware,
+);
+
 app.use(
   '/graphiql',
   graphiqlConnect({
     endpointURL: '/graphql',
   }),
 );
+
+//
+// Auth Test URL
+//--------------------------------------------------------------------------------
+app.get('/test', superLogin.authenticate, (req, res) => {
+  res.json(req.user);
+});
 
 //
 // Register server-side rendering middleware
