@@ -4,6 +4,7 @@ import AssetsPlugin from 'assets-webpack-plugin';
 import PersistGraphQLPlugin from 'persistgraphql-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import overrideRules from './lib/overrideRules';
 import pkg from '../package.json';
 
@@ -227,7 +228,7 @@ const config = {
 
       // Convert plain text into JS module
       {
-        test: /\.txt$/,
+        test: /\.(txt|pem|csr)$/,
         loader: 'raw-loader',
       },
 
@@ -489,6 +490,12 @@ const serverConfig = {
       raw: true,
       entryOnly: false,
     }),
+
+    new CopyWebpackPlugin([
+      { from: 'src/server/oauth/views', to: 'views' },
+      { from: 'src/server/oauth/public', to: 'public' },
+      { from: 'src/server/oauth/certs', to: 'certs' },
+    ]),
   ],
 
   // Do not replace node globals with polyfills

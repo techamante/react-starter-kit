@@ -24,7 +24,7 @@ export default class User extends Model {
     providers: [
       {
         provider: String,
-        id: String,
+        providerId: String,
         auth: {
           accessToken: String,
           refreshToken: String,

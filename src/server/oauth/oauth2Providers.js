@@ -1,85 +1,20 @@
-import Promise from 'bluebird';
-import { extend } from 'lodash';
-import config from '../../../../config';
-import { getObjectRef } from '../../../helpers/util';
-import User from '../models/User';
-import createTokens from './tokens';
+const User = require('../modules/auth/models/User').default;
+
+const Promise = require('bluebird');
+const extend = require('lodash').extend;
+const getObjectRef = require('./utils').getObjectRef;
 
 const stateRequired = ['google', 'linkedin'];
 
-export default function(router, passport) {
-  function getLinkCallbackURLs(provider, req, operation, accessToken) {
-    if (accessToken) {
-      accessToken = encodeURIComponent(accessToken);
-    }
-    const protocol = `${req.get('X-Forwarded-Proto') || req.protocol}://`;
-    if (operation === 'login') {
-      return `${protocol + req.get('host') + req.baseUrl}/${provider}/callback`;
-    }
-    if (operation === 'link') {
-      let reqUrl;
-      if (
-        accessToken &&
-        (stateRequired.indexOf(provider) > -1 ||
-          config.getItem(`providers.${provider}.stateRequired`) === true)
-      ) {
-        reqUrl = `${protocol + req.get('host') + req.baseUrl}/link/${
-          provider
-        }/callback`;
-      } else {
-        reqUrl = `${protocol + req.get('host') + req.baseUrl}/link/${
-          provider
-        }/callback?state=${accessToken}`;
-      }
-      return reqUrl;
-    }
-  }
-
-  // Configures the passport.authenticate for the given provider, passing in options
-  // Operation is 'login' or 'link'
-  function passportCallback(provider, options, operation) {
-    return function callback(req, res, next) {
-      const theOptions = extend({}, options);
-      if (provider === 'linkedin') {
-        theOptions.state = true;
-      }
-      const accessToken = req.query.bearer_token || req.query.state;
-      if (
-        accessToken &&
-        (stateRequired.indexOf(provider) > -1 ||
-          config.getItem(`providers.${provider}.stateRequired`) === true)
-      ) {
-        theOptions.state = accessToken;
-      }
-      theOptions.callbackURL = getLinkCallbackURLs(
-        provider,
-        req,
-        operation,
-        accessToken,
-      );
-      theOptions.session = false;
-
-      passport.authenticate(provider, theOptions, async (err, user, info) => {
-        if (user) {
-          const [token] = await createTokens(user, config.auth.jwt.secretOrKey);
-          req.universalCookies.set('Bearer', token, {
-            maxAge: 60 * 60 * 24 * 7,
-            httpOnly: true,
-          });
-          return res.json(token);
-        }
-        return next();
-      })(req, res, next);
-    };
-  }
-
+module.exports = function providers(router, passport, config) {
   // This is called after a user has successfully authenticated with a provider
   // If a user is authenticated with a bearer token we will link an account, otherwise log in
   // auth is an object containing 'access_token' and optionally 'refresh_token'
   async function authHandler(req, provider, auth, profile) {
     let user = await User.findOne({
-      [`providers.${provider}.id`]: profile.id,
-    });
+      'providers.providerId': profile.id,
+      'providers.provider': provider,
+    }).exec();
     if (!user) {
       const tempUser = {
         role: 'user',
@@ -111,13 +46,70 @@ export default function(router, passport) {
 
       tempUser.providers = {
         provider,
-        id: profile.id,
+        providerId: profile.id,
         auth,
       };
       user = new User(tempUser);
       await user.save();
     }
     return user;
+  }
+
+  function getLinkCallbackURLs(provider, req, operation, accessToken) {
+    if (accessToken) {
+      accessToken = encodeURIComponent(accessToken);
+    }
+    const protocol = `${req.get('X-Forwarded-Proto') || req.protocol}://`;
+    if (operation === 'login') {
+      return `${protocol + req.get('host') + req.baseUrl}/auth/${
+        provider
+      }/callback`;
+    }
+    if (operation === 'link') {
+      let reqUrl;
+      if (
+        accessToken &&
+        (stateRequired.indexOf(provider) > -1 ||
+          config.getItem(`providers.${provider}.stateRequired`) === true)
+      ) {
+        reqUrl = `${protocol + req.get('host') + req.baseUrl}/link/${
+          provider
+        }/callback`;
+      } else {
+        reqUrl = `${protocol + req.get('host') + req.baseUrl}/link/${
+          provider
+        }/callback?state=${accessToken}`;
+      }
+      return reqUrl;
+    }
+    return null;
+  }
+
+  // Configures the passport.authenticate for the given provider, passing in options
+  // Operation is 'login' or 'link'
+  function passportCallback(provider, options, operation) {
+    return (req, res, next) => {
+      const theOptions = extend({}, options);
+      if (provider === 'linkedin') {
+        theOptions.state = true;
+      }
+      const accessToken = req.query.bearer_token || req.query.state;
+      if (
+        accessToken &&
+        (stateRequired.indexOf(provider) > -1 ||
+          config.getItem(`providers.${provider}.stateRequired`) === true)
+      ) {
+        theOptions.state = accessToken;
+      }
+      theOptions.callbackURL = getLinkCallbackURLs(
+        provider,
+        req,
+        operation,
+        accessToken,
+      );
+      theOptions.successReturnToOrRedirect = '/';
+      passport.authenticate(provider, theOptions)(req, res, next);
+    };
   }
 
   // Framework to register OAuth providers with passport
@@ -130,13 +122,15 @@ export default function(router, passport) {
       const options = getObjectRef(config, `${configRef}.options`) || {};
       configFunction.call(null, credentials, passport, authHandler);
       router.get(
-        `/${providerName}`,
-        passportCallback(providerName, options, 'login'),
-      );
-      router.get(
-        `/${provider}/callback`,
+        `/auth/${provider}`,
         passportCallback(provider, options, 'login'),
       );
+      router.get(
+        `/auth/${provider}/callback`,
+        passportCallback(provider, options, 'login'),
+      );
+
+      console.log(`${provider} loaded.`);
     }
   }
 
@@ -162,4 +156,4 @@ export default function(router, passport) {
   return {
     registerOAuth2,
   };
-}
+};

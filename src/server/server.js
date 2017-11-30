@@ -5,9 +5,15 @@ import { graphiqlConnect } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import cookiesMiddleware from 'universal-cookie-express';
 import passport from 'passport';
-import GoogleStrategy from 'passport-google-oauth20';
-import FacebookStrategy from 'passport-facebook';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+import session from 'express-session';
+import { ensureLoggedIn } from 'connect-ensure-login';
+
 import config from '../config';
+import oauth from './oauth';
+import './oauth/auth';
+
 import {
   graphqlMiddleware,
   persistedQueriesMiddleware,
@@ -15,13 +21,13 @@ import {
 } from './graphql';
 
 import { errorHandler, renderer } from './middlewares';
-// import authRoutes from './routes/authRoutes';
-import SuperLogin from './modules/auth/services';
 
+dotenv.load();
 mongoose.connect(config.mongoURI);
 
 const app = express();
-
+app.set('view engine', 'ejs');
+app.set('views', `${__dirname}/views`);
 //
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
 // user agent is not known.
@@ -36,16 +42,24 @@ app.use(createApolloEngineMiddleware());
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(cookiesMiddleware());
+app.use(
+  session({
+    secret: 'shhhhhhhhh',
+    resave: true,
+    saveUninitialized: true,
+    key: 'authorization.sid',
+  }),
+);
 
 //
 // Authentication
 // -----------------------------------------------------------------------------
 app.use(passport.initialize());
-const superLogin = SuperLogin();
-superLogin.registerOAuth2('google', GoogleStrategy);
-superLogin.registerOAuth2('facebook', FacebookStrategy);
-app.use('/auth', superLogin.router);
+app.use(passport.session());
+
+app.use('/', oauth);
 
 if (__DEV__) {
   app.enable('trust proxy');
@@ -54,12 +68,7 @@ if (__DEV__) {
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-app.use(
-  '/graphql',
-  superLogin.authenticate,
-  persistedQueriesMiddleware,
-  graphqlMiddleware,
-);
+app.use('/graphql', persistedQueriesMiddleware, graphqlMiddleware);
 
 app.use(
   '/graphiql',
@@ -71,7 +80,7 @@ app.use(
 //
 // Auth Test URL
 //--------------------------------------------------------------------------------
-app.get('/test', superLogin.authenticate, (req, res) => {
+app.get('/test', ensureLoggedIn(), (req, res) => {
   res.json(req.user);
 });
 

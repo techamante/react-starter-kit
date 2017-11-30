@@ -31,7 +31,7 @@ class Login extends React.Component {
             </a>
           </div>
           <div className={s.formGroup}>
-            <a className={s.google} href="/login/google">
+            <a className={s.google} href="/auth/google">
               <svg
                 className={s.icon}
                 width="30"
@@ -89,7 +89,7 @@ class Login extends React.Component {
                 className={s.input}
                 id="usernameOrEmail"
                 type="text"
-                name="usernameOrEmail"
+                name="username"
                 autoFocus // eslint-disable-line jsx-a11y/no-autofocus
               />
             </div>
