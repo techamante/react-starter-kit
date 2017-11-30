@@ -9,6 +9,9 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import { ensureLoggedIn } from 'connect-ensure-login';
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies, import/extensions
+import queryMap from 'persisted_queries.json';
+import websiteMiddleware from './middlewares/website';
 
 import config from '../config';
 import oauth from './oauth';
@@ -20,7 +23,7 @@ import {
   createApolloEngineMiddleware,
 } from './graphql';
 
-import { errorHandler, renderer } from './middlewares';
+// import { errorHandler } from './middlewares';
 
 dotenv.load();
 mongoose.connect(config.mongoURI);
@@ -87,12 +90,12 @@ app.get('/test', ensureLoggedIn(), (req, res) => {
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
-app.get('*', renderer);
+app.use((...args) => websiteMiddleware(queryMap)(...args));
 
 //
 // Error handling
 // -----------------------------------------------------------------------------
-app.use(errorHandler);
+// app.use(errorHandler);
 
 //
 // Launch the server
@@ -109,7 +112,7 @@ if (!module.hot) {
 // -----------------------------------------------------------------------------
 if (module.hot) {
   app.hot = module.hot;
-  module.hot.accept('../client/router');
+  // module.hot.accept('../client/router');
 }
 
 export default app;

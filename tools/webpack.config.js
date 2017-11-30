@@ -49,6 +49,7 @@ const config = {
   },
 
   resolve: {
+    extensions: ['.js', '.jsx'],
     // Allow absolute paths in imports, e.g. import Button from 'components/Button'
     // Keep in sync with .flowconfig and .eslintrc
     modules: ['node_modules', 'src'],
@@ -172,18 +173,18 @@ const config = {
           // Compile Less to CSS
           // https://github.com/webpack-contrib/less-loader
           // Install dependencies before uncommenting: yarn add --dev less-loader less
-          // {
-          //   test: /\.less$/,
-          //   loader: 'less-loader',
-          // },
+          {
+            test: /\.less$/,
+            loader: 'less-loader',
+          },
 
           // Compile Sass to CSS
           // https://github.com/webpack-contrib/sass-loader
           // Install dependencies before uncommenting: yarn add --dev sass-loader node-sass
-          // {
-          //   test: /\.scss$/,
-          //   loader: 'sass-loader',
-          // },
+          {
+            test: /\.scss$/,
+            loader: 'sass-loader',
+          },
         ],
       },
 
@@ -307,7 +308,7 @@ const clientConfig = {
   target: 'web',
 
   entry: {
-    client: ['babel-polyfill', './src/client/client.js'],
+    client: ['babel-polyfill', './src/client/index.jsx'],
   },
 
   plugins: [
@@ -321,6 +322,7 @@ const clientConfig = {
       __BACKEND_URL__: "'http://localhost:3000/graphql'",
       __SSR__: true,
       __SERVER__: false,
+      __PERSIST_GQL__: true,
     }),
 
     // Emit a file with assets paths
@@ -479,6 +481,7 @@ const serverConfig = {
       __CLIENT__: false,
       __BACKEND_URL__: "'http://localhost:3000/graphql'",
       __SSR__: true,
+      __PERSIST_GQL__: true,
     }),
 
     backendPersistPlugin,
