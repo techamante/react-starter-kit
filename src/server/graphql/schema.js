@@ -26,7 +26,7 @@ import me from '../modules/sample/me';
 import news from '../modules/sample/news';
 
 const trubysSchema = makeExecutableSchema({
-  typeDefs: [RootSchema, ...modules.schemas],
+  typeDefs: [RootSchema].concat(modules.schemas),
   resolvers: modules.createResolvers(pubsub),
 });
 
@@ -42,6 +42,4 @@ const schema = new Schema({
   }),
 });
 
-export default mergeSchemas({
-  schemas: [trubysSchema, schema],
-});
+export default trubysSchema;

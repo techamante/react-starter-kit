@@ -1,13 +1,12 @@
+import http from 'http';
+import bluebird from 'bluebird';
 import path from 'path';
 import express from 'express';
-import bodyParser from 'body-parser';
 import { graphiqlConnect } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import cookiesMiddleware from 'universal-cookie-express';
 import passport from 'passport';
-import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import session from 'express-session';
+
 import { ensureLoggedIn } from 'connect-ensure-login';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies, import/extensions
 import queryMap from 'persisted_queries.json';
@@ -17,20 +16,36 @@ import config from '../config';
 import oauth from './oauth';
 import './oauth/auth';
 
+import addGraphQLSubscriptions from './graphql/subscriptions';
+
 import {
   graphqlMiddleware,
   persistedQueriesMiddleware,
   createApolloEngineMiddleware,
 } from './graphql';
 
+import expressConfig from './express';
+
 // import { errorHandler } from './middlewares';
+
+global.Promise = bluebird;
 
 dotenv.load();
 mongoose.connect(config.mongoURI);
 
 const app = express();
-app.set('view engine', 'ejs');
-app.set('views', `${__dirname}/views`);
+
+const server = http.createServer((req, res) => {
+  res.writeHead(400);
+  res.end();
+});
+
+server.listen(3002, () => {
+  console.info(`Websocket server is running at http://localhost:3002/`);
+});
+
+addGraphQLSubscriptions(server);
+
 //
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
 // user agent is not known.
@@ -42,25 +57,11 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 // Setup Express Pipeline
 // -----------------------------------------------------------------------------
 app.use(createApolloEngineMiddleware());
-app.use(express.static(path.resolve(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(cookiesMiddleware());
-app.use(
-  session({
-    secret: 'shhhhhhhhh',
-    resave: true,
-    saveUninitialized: true,
-    key: 'authorization.sid',
-  }),
-);
+expressConfig(app, config);
 
 //
 // Authentication
 // -----------------------------------------------------------------------------
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/', oauth);
 
@@ -77,6 +78,8 @@ app.use(
   '/graphiql',
   graphiqlConnect({
     endpointURL: '/graphql',
+    subscriptionEndPoint: `ws://localhost:3002/graphql`,
+    query: '{\n' + '  counter {\n' + '    amount\n' + '  }\n' + '}',
   }),
 );
 

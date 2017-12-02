@@ -7,7 +7,7 @@ export default pubsub => ({
     },
   },
   Mutation: {
-    async addCounter(obj, { amount }, context) {
+    addCounter(obj, { amount }, context) {
       const counter = {
         amount: amount + 1,
       };

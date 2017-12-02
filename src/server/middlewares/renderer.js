@@ -11,7 +11,7 @@ import config from '../../config';
 import { setRuntimeVariable } from '../../client/actions/runtime';
 import router from '../../client/router';
 import App from '../../client/components/App';
-import Html from '../../client/components/Html';
+import Html from './Html';
 import assets from './assets.json'; // eslint-disable-line import/no-unresolved
 
 export default async (req, res, next) => {

@@ -6,12 +6,7 @@
     "node": ">=6.5",
     "npm": ">=3.10"
   },
-  "browserslist": [
-    ">1%",
-    "last 4 versions",
-    "Firefox ESR",
-    "not ie < 9"
-  ],
+  "browserslist": [">1%", "last 4 versions", "Firefox ESR", "not ie < 9"],
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.1",
     "apollo-client": "2.0.3",
@@ -30,6 +25,7 @@
     "body-parser": "^1.17.2",
     "bootstrap": "4.0.0-beta.2",
     "classnames": "^2.2.5",
+    "compression": "^1.7.1",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
@@ -46,7 +42,7 @@
     "graphql-subscriptions": "^0.5.4",
     "graphql-tag": "^2.5.0",
     "graphql-tools": "^2.7.2",
-    "history": "^4.6.3",
+    "history": "^4.7.2",
     "immutability-helper": "^2.5.1",
     "isomorphic-fetch": "2.2.1",
     "isomorphic-style-loader": "^4.0.0",
@@ -87,7 +83,7 @@
     "react-redux": "^5.0.5",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-router-redux": "^4.0.8",
+    "react-router-redux": "5.0.0-alpha.8",
     "reactstrap": "^5.0.0-alpha.4",
     "redux": "^3.7.1",
     "redux-devtools-extension": "^2.13.2",
@@ -207,9 +203,7 @@
     ],
     "env": {
       "test": {
-        "plugins": [
-          "rewire"
-        ]
+        "plugins": ["rewire"]
       }
     },
     "ignore": [
@@ -221,18 +215,9 @@
     ]
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{json,graphql}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.{css,less,scss,sss}": [
-      "stylelint --fix",
-      "git add"
-    ]
+    "*.{js,jsx}": ["eslint --fix", "git add"],
+    "*.{json,graphql}": ["prettier --write", "git add"],
+    "*.{css,less,scss,sss}": ["stylelint --fix", "git add"]
   },
   "scripts": {
     "precommit": "lint-staged",

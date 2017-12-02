@@ -85,8 +85,8 @@ const Html = ({
           }}
           charSet="UTF-8"
         />
-        {assetMap.vendor && <script src={assetMap.vendor} charSet="utf-8" />}
-        <script src={assetMap.client} charSet="utf-8" />
+        {assetMap.vendor && <script src={assetMap.vendor.js} charSet="utf-8" />}
+        <script src={assetMap.client.js} charSet="utf-8" />
       </body>
     </html>
   );

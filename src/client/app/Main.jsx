@@ -8,7 +8,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { LoggingLink } from 'apollo-logger';
 import { ApolloProvider } from 'react-apollo';
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory as createHistory } from 'history';
 import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 // import { addPersistedQueries } from 'persistgraphql';
@@ -20,9 +20,11 @@ import url from 'url';
 import RedBox from './RedBox';
 import createApolloClient from '../../common/createApolloClient';
 import createReduxStore, { storeReducer } from '../../common/createReduxStore';
-import settings from '../../config';
+import settings from '../../../settings';
 import Routes from './Routes';
 import modules from '../modules';
+
+console.log(modules);
 
 const { hostname, pathname, port } = url.parse(__BACKEND_URL__);
 
@@ -64,7 +66,7 @@ for (const connectionParam of modules.connectionParams) {
 
 const wsUri = (hostname === 'localhost'
   ? `${window.location.protocol}${window.location.hostname}:${
-      __DEV__ ? port : window.location.port
+      __DEV__ ? '3002' : '3002'
     }${pathname}`
   : __BACKEND_URL__
 ).replace(/^http/, 'ws');
@@ -185,13 +187,11 @@ class Main extends React.Component {
     return this.state.error ? (
       <RedBox error={this.state.error} />
     ) : (
-      modules.getWrappedRoot(
-        <Provider store={store}>
-          <ApolloProvider client={client}>
-            <ConnectedRouter history={history}>{Routes}</ConnectedRouter>
-          </ApolloProvider>
-        </Provider>,
-      )
+      <Provider store={store}>
+        <ApolloProvider client={client}>
+          <ConnectedRouter history={history}>{Routes}</ConnectedRouter>
+        </ApolloProvider>
+      </Provider>
     );
   }
 }

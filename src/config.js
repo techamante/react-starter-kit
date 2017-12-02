@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 
-if (process.env.BROWSER) {
-  throw new Error(
-    'Do not import `config.js` from inside the client-side code.',
-  );
-}
+// if (process.env.BROWSER) {
+//   throw new Error(
+//     'Do not import `config.js` from inside the client-side code.',
+//   );
+// }
 
 export default {
   // Node.js app
