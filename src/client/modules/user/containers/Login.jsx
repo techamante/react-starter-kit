@@ -22,7 +22,7 @@ const LoginWithApollo = compose(
       login: async ({ email, password }) => {
         try {
           const { data: { login } } = await mutate({
-            variables: { input: { email, password } }
+            variables: { input: { username: email, password } },
           });
 
           if (login.errors) {
@@ -42,9 +42,9 @@ const LoginWithApollo = compose(
         } catch (e) {
           console.log(e.graphQLErrors);
         }
-      }
-    })
-  })
+      },
+    }),
+  }),
 )(Login);
 
 export default LoginWithApollo;

@@ -12,7 +12,7 @@ import {
 } from '../../common/components/web';
 
 import LoginForm from '../components/LoginForm';
-import settings from '../../../../config';
+import settings from '../../../../../settings';
 
 class LoginView extends React.PureComponent {
   onSubmit = login => async values => {

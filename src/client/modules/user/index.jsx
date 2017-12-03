@@ -17,7 +17,9 @@ import Feature from '../connector';
 
 function tokenMiddleware(req, options, next) {
   options.headers['x-token'] = window.localStorage.getItem('token');
-  options.headers['x-refresh-token'] = window.localStorage.getItem('refreshToken');
+  options.headers['x-refresh-token'] = window.localStorage.getItem(
+    'refreshToken',
+  );
   next();
 }
 
@@ -36,7 +38,7 @@ function tokenAfterware(res, options, next) {
 function connectionParam() {
   return {
     token: window.localStorage.getItem('token'),
-    refreshToken: window.localStorage.getItem('refreshToken')
+    refreshToken: window.localStorage.getItem('refreshToken'),
   };
 }
 
@@ -48,7 +50,7 @@ export default new Feature({
     <Route exact path="/register" component={Register} />,
     <Route exact path="/login" component={Login} />,
     <Route exact path="/forgot-password" component={ForgotPassword} />,
-    <Route exact path="/reset-password/:token" component={ResetPassword} />
+    <Route exact path="/reset-password/:token" component={ResetPassword} />,
   ],
   navItem: [
     <MenuItem key="/users">
@@ -57,7 +59,7 @@ export default new Feature({
           Users
         </NavLink>
       </AuthNav>
-    </MenuItem>
+    </MenuItem>,
   ],
   navItemRight: [
     <MenuItem key="/profile">
@@ -66,17 +68,19 @@ export default new Feature({
     <MenuItem key="login">
       <AuthLogin>
         <span className="nav-link">
-          <NavLink to="/login" activeClassName="active">
+          <a href="/dialog/authorize?redirect_uri=http://localhost:3000/callback&response_type=token&client_id=abc123">
             Sign In
-          </NavLink>
+          </a>
         </span>
       </AuthLogin>
-    </MenuItem>
+    </MenuItem>,
   ],
   reducer: { user: reducers },
   middleware: tokenMiddleware,
   afterware: tokenAfterware,
-  connectionParam: connectionParam,
+  connectionParam,
   // eslint-disable-next-line react/display-name
-  rootComponentFactory: req => <CookiesProvider cookies={req ? req.universalCookies : undefined} />
+  rootComponentFactory: req => (
+    <CookiesProvider cookies={req ? req.universalCookies : undefined} />
+  ),
 });

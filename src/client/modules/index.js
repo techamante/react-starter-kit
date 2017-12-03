@@ -9,4 +9,4 @@ import ui from './ui-bootstrap';
 
 import Feature from './connector';
 
-export default new Feature(counter, post, upload, pageNotFound, ui);
+export default new Feature(counter, post, upload, user, pageNotFound, ui);

@@ -6,7 +6,7 @@ import { LayoutCenter } from '../../common/components';
 import { PageLayout } from '../../common/components/web';
 
 import RegisterForm from '../components/RegisterForm';
-import settings from '../../../../config';
+import settings from '../../../../../settings';
 
 class RegisterView extends React.PureComponent {
   onSubmit = async values => {

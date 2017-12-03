@@ -10,7 +10,7 @@ import {
   PageLayout,
 } from '../../common/components/web';
 
-import settings from '../../../../config';
+import settings from '../../../../../settings';
 
 const renderMetaData = () => (
   <Helmet

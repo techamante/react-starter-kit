@@ -5,7 +5,7 @@ import url from 'url';
 import { NavLink, Link } from 'react-router-dom';
 import { Form, RenderField, Alert, Button } from '../../common/components/web';
 
-import settings from '../../../../config';
+import settings from '../../../../../settings';
 
 const { protocol, hostname, port } = url.parse(__BACKEND_URL__);
 let serverPort = process.env.PORT || port;
@@ -24,7 +24,7 @@ const LoginForm = ({ handleSubmit, submitting, onSubmit, error }) => (
     <Field
       name="email"
       component={RenderField}
-      type="email"
+      type="input"
       label="Email"
       validate={required}
     />

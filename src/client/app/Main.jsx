@@ -24,8 +24,6 @@ import settings from '../../../settings';
 import Routes from './Routes';
 import modules from '../modules';
 
-console.log(modules);
-
 const { hostname, pathname, port } = url.parse(__BACKEND_URL__);
 
 const fetch = createApolloFetch({

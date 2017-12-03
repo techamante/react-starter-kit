@@ -1,10 +1,8 @@
 import http from 'http';
 import bluebird from 'bluebird';
-import path from 'path';
 import express from 'express';
 import { graphiqlConnect } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import passport from 'passport';
 import dotenv from 'dotenv';
 
 import { ensureLoggedIn } from 'connect-ensure-login';
@@ -30,21 +28,9 @@ import expressConfig from './express';
 
 global.Promise = bluebird;
 
-dotenv.load();
 mongoose.connect(config.mongoURI);
 
 const app = express();
-
-const server = http.createServer((req, res) => {
-  res.writeHead(400);
-  res.end();
-});
-
-server.listen(3002, () => {
-  console.info(`Websocket server is running at http://localhost:3002/`);
-});
-
-addGraphQLSubscriptions(server);
 
 //
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
@@ -117,5 +103,16 @@ if (module.hot) {
   app.hot = module.hot;
   // module.hot.accept('../client/router');
 }
+
+const server = http.createServer((req, res) => {
+  res.writeHead(400);
+  res.end();
+});
+
+server.listen(3002, () => {
+  console.info(`Websocket server is running at http://localhost:3002/`);
+});
+
+addGraphQLSubscriptions(server);
 
 export default app;
