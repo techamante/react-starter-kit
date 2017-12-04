@@ -92,9 +92,7 @@ export default new Feature({
     <MenuItem key="login">
       <AuthLogin>
         <span className="nav-link">
-          <a href="/dialog/authorize?redirect_uri=http://localhost:3000/callback&response_type=token&client_id=abc123&scope=offline_access">
-            Sign In
-          </a>
+          <a href="/auth/login">Sign In</a>
         </span>
       </AuthLogin>
     </MenuItem>,

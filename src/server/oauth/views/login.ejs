@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>OAuth2Orize Recipes Login</title>
+  <title>Authorization Server</title>
   <!-- Needed for mobile sites to work -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,13 +16,12 @@
 
   <!-- HTML login screen form -->
   <form action="/login" method="post" class="pure-form pure-form-stacked">
-    <a href="/auth/google">Login with facebook</a>
     <fieldset>
       <!-- Upper box with Title, username, and password -->
       <div class="upper-box">
         <!-- Title -->
         <div>
-          <h1 class="title-padding">Authorization Server</h1>
+          <h1 class="title-padding">Login In</h1>
         </div>
         <div class="pure-control-group">
           <!-- Username label and input -->
@@ -47,14 +46,13 @@
           <button type="submit" value="Submit" class="pure-button pure-button-primary">Sign in</button>
         </div>
       </div>
-    </fieldset>
-    <div class="from-text">
-      <a href="https://github.com/FrankHassanabad/Oauth2orizeRecipes">
-        From OAuth2OrizeRecipes
-      </a>
-    </div>
-  </form>
+      <div class="login-box">
+        <h4>External Logins</h4>
+        <a class="pure-button pure-button-primary" href="/auth/google">Login with google</a>
 
+      </div>
+    </fieldset>
+  </form>
 </body>
 
 </html>

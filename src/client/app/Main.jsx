@@ -64,7 +64,7 @@ for (const connectionParam of modules.connectionParams) {
 
 const wsUri = (hostname === 'localhost'
   ? `${window.location.protocol}${window.location.hostname}:${
-      __DEV__ ? '3002' : '3002'
+      __DEV__ ? 3002 : window.location.port
     }${pathname}`
   : __BACKEND_URL__
 ).replace(/^http/, 'ws');

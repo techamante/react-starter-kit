@@ -1,6 +1,6 @@
 import { Engine } from 'apollo-engine';
 import url from 'url';
-import config from '../../config';
+import config from '../../../settings';
 
 export default () => {
   let engine;

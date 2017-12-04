@@ -10,7 +10,7 @@ import { ensureLoggedIn } from 'connect-ensure-login';
 import queryMap from 'persisted_queries.json';
 import websiteMiddleware from './middlewares/website';
 
-import config from '../config';
+import config from '../../settings';
 import oauth from './oauth';
 import './oauth/auth';
 
@@ -28,7 +28,11 @@ import expressConfig from './express';
 
 global.Promise = bluebird;
 
-mongoose.connect(config.mongoURI);
+mongoose.connect(config.db.mongoURI);
+// todo workaround for HMR. It remove old model before added new ones
+Object.keys(mongoose.connection.models).forEach(key => {
+  delete mongoose.connection.models[key];
+});
 
 const app = express();
 
@@ -69,7 +73,7 @@ app.use(
   }),
 );
 
-app.get('/auth/example', passport.authenticate('oauth2'));
+app.get('/auth/login', passport.authenticate('oauth2'));
 
 app.get(
   '/callback',
@@ -101,28 +105,54 @@ app.use((...args) => websiteMiddleware(queryMap)(...args));
 // -----------------------------------------------------------------------------
 
 if (!module.hot) {
-  app.listen(config.port, () => {
+  const server = app.listen(config.port, () => {
     console.info(`The server is running at http://localhost:${config.port}/`);
   });
+  addGraphQLSubscriptions(server);
+}
+
+function createSocket() {
+  const server = http.createServer((req, res) => {
+    res.writeHead(400);
+    res.end();
+  });
+
+  server.listen(3002, () => {
+    console.info(`Websocket server is running at http://localhost:3002/`);
+  });
+
+  return server;
 }
 
 //
 // Hot Module Replacement
 // -----------------------------------------------------------------------------
+let server;
 if (module.hot) {
   app.hot = module.hot;
-  // module.hot.accept('../client/router');
+  server = createSocket();
+  addGraphQLSubscriptions(server);
+
+  module.hot.dispose(() => {
+    try {
+      if (server) {
+        server.close();
+      }
+    } catch (error) {
+      console.log(error.stack);
+    }
+  });
+
+  module.hot.accept(['./graphql/subscriptions'], () => {
+    try {
+      server = createSocket();
+      addGraphQLSubscriptions(server);
+    } catch (error) {
+      console.log(error.stack);
+    }
+  });
+
+  module.hot.accept();
 }
-
-const server = http.createServer((req, res) => {
-  res.writeHead(400);
-  res.end();
-});
-
-server.listen(3002, () => {
-  console.info(`Websocket server is running at http://localhost:3002/`);
-});
-
-addGraphQLSubscriptions(server);
 
 export default app;

@@ -31,7 +31,7 @@ if (__DEV__) {
         log.debug('Updating front-end');
         frontendReloadCount = (frontendReloadCount || 0) + 1;
 
-        ReactDOM.render(Main, root);
+        ReactDOM.render(<Main />, root);
       } catch (err) {
         log(err.stack);
       }
