@@ -4,8 +4,8 @@ import authorize from '../../helpers/decorators';
 
 export default () => ({
   Query: {
-    currentUser(obj, args, { auth: { user } }) {
-      return user;
+    currentUser(obj, args, ctx) {
+      return ctx.user;
     },
   },
 

@@ -4,18 +4,4 @@ fragment UserInfo on User {
   id
   username
   role
-  isActive
-  email
-  profile {
-    ... UserProfileInfo
-  }
-  auth {
-    certificate {
-      serial
-    }
-    facebook {
-      fbId
-      displayName
-    }
-  }
 }

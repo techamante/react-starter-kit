@@ -85,6 +85,7 @@
     "react-dropzone": "^4.2.3",
     "react-ga": "^2.3.5",
     "react-helmet": "^5.2.0",
+    "react-loadable": "^5.3.1",
     "react-navigation": "^1.0.0-beta.21",
     "react-redux": "^5.0.5",
     "react-router": "^4.2.0",

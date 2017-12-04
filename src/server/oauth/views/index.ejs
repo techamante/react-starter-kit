@@ -18,7 +18,7 @@
       var http = location.protocol;
       var slashes = http.concat("//");
       var port = location.port ? ':' + location.port : '';
-      var host = slashes.concat(window.location.hostname) + port;
+      var host = slashes.concat(window.location.hostname) + port + '/auth';
       var fragment = window.location.hash;
 
       //replace the host name from the URL and replace all the links we have with the host name as well.

@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
 import cookiesMiddleware from 'universal-cookie-express';
 import session from 'express-session';
+import passportConfig from './passport';
 
 export default (app, config) => {
   app.set('view engine', 'ejs');
@@ -37,7 +38,7 @@ export default (app, config) => {
 
   app.use(passport.initialize());
   app.use(passport.session());
-
+  passportConfig(config);
   app.use(flash());
 
   // static files

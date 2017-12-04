@@ -18,7 +18,7 @@ const passport = require('passport');
  * @returns {undefined}
  */
 exports.info = [
-  passport.authenticate('bearer', { session: false }),
+  passport.authenticate('bearer', { session: true }),
   (req, res) => {
     // req.authInfo is set using the `info` argument supplied by
     // `BearerStrategy`.  It is typically used to indicate scope of the token,

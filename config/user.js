@@ -7,16 +7,16 @@ export default {
       confirm: true,
       sendConfirmationEmail: true,
       sendAddNewUserEmail: true,
-      enabled: true
+      enabled: true,
     },
     certificate: {
       devSerial: CERTIFICATE_DEVSERIAL,
-      enabled: false
+      enabled: false,
     },
     facebook: {
       clientID: process.env.FACEBOOK_CLIENTID,
       clientSecret: process.env.FACEBOOK_CLIENTSECRET,
-      enabled: false
-    }
-  }
+      enabled: false,
+    },
+  },
 };

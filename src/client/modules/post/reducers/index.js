@@ -1,5 +1,5 @@
 const defaultState = {
-  comment: { id: null, content: '' }
+  comment: { id: null, content: '' },
 };
 
 export default function(state = defaultState, action) {
@@ -7,7 +7,7 @@ export default function(state = defaultState, action) {
     case 'COMMENT_SELECT':
       return {
         ...state,
-        comment: action.value
+        comment: action.value,
       };
 
     default:

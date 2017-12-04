@@ -97,11 +97,11 @@ const renderServerSide = async (req, res) => {
   } else {
     const apolloState = Object.assign({}, cache.extract());
 
-    const token = req.universalCookies.get('x-token')
-      ? req.universalCookies.get('x-token')
+    const token = req.universalCookies.get('r-token')
+      ? req.universalCookies.get('r-token')
       : null;
-    const refreshToken = req.universalCookies.get('x-refresh-token')
-      ? req.universalCookies.get('x-refresh-token')
+    const refreshToken = req.universalCookies.get('r-refresh-token')
+      ? req.universalCookies.get('r-refresh-token')
       : null;
 
     const page = (

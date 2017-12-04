@@ -1,5 +1,5 @@
 const defaultState = {
-  reduxCount: 1
+  reduxCount: 1,
 };
 
 export default function(state = defaultState, action) {
@@ -7,7 +7,7 @@ export default function(state = defaultState, action) {
     case 'COUNTER_INCREMENT':
       return {
         ...state,
-        reduxCount: state.reduxCount + action.value
+        reduxCount: state.reduxCount + action.value,
       };
 
     default:

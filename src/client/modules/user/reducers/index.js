@@ -3,7 +3,7 @@ const defaultState = {
   searchText: '',
   role: '',
   isActive: null,
-  orderBy: {}
+  orderBy: {},
 };
 
 export default function(state = defaultState, action) {
@@ -11,13 +11,13 @@ export default function(state = defaultState, action) {
     case 'USER_FILTER_SEARCH_TEXT':
       return {
         ...state,
-        searchText: action.value
+        searchText: action.value,
       };
 
     case 'USER_FILTER_ROLE':
       return {
         ...state,
-        role: action.value
+        role: action.value,
       };
 
     case 'USER_FILTER_IS_ACTIVE': {
@@ -28,14 +28,14 @@ export default function(state = defaultState, action) {
 
       return {
         ...state,
-        isActive
+        isActive,
       };
     }
 
     case 'USER_ORDER_BY':
       return {
         ...state,
-        orderBy: action.value
+        orderBy: action.value,
       };
 
     default:

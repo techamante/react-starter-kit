@@ -3,7 +3,7 @@ import bluebird from 'bluebird';
 import express from 'express';
 import { graphiqlConnect } from 'apollo-server-express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import passport from 'passport';
 
 import { ensureLoggedIn } from 'connect-ensure-login';
 // eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies, import/extensions
@@ -69,10 +69,20 @@ app.use(
   }),
 );
 
+app.get('/auth/example', passport.authenticate('oauth2'));
+
+app.get(
+  '/callback',
+  passport.authenticate('oauth2', { failureRedirect: '/test' }),
+  (req, res) => {
+    res.redirect('/');
+  },
+);
+
 //
 // Auth Test URL
 //--------------------------------------------------------------------------------
-app.get('/test', ensureLoggedIn(), (req, res) => {
+app.get('/test', (req, res) => {
   res.json(req.user);
 });
 

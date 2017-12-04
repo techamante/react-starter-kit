@@ -2,7 +2,7 @@ export default {
   name: 'Apollo Starter Kit',
   logging: {
     debugSQL: false,
-    apolloLogging: false
+    apolloLogging: false,
   },
-  stackFragmentFormat: 'vscode://file/{0}:{1}:{2}'
+  stackFragmentFormat: 'vscode://file/{0}:{1}:{2}',
 };

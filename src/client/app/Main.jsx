@@ -185,11 +185,13 @@ class Main extends React.Component {
     return this.state.error ? (
       <RedBox error={this.state.error} />
     ) : (
-      <Provider store={store}>
-        <ApolloProvider client={client}>
-          <ConnectedRouter history={history}>{Routes}</ConnectedRouter>
-        </ApolloProvider>
-      </Provider>
+      modules.getWrappedRoot(
+        <Provider store={store}>
+          <ApolloProvider client={client}>
+            <ConnectedRouter history={history}>{Routes}</ConnectedRouter>
+          </ApolloProvider>
+        </Provider>,
+      )
     );
   }
 }

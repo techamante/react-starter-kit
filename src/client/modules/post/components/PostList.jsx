@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { PageLayout, Table, Button } from '../../common/components/web';
-import settings from '../../../../config';
+import settings from '../../../../../settings';
 
 class PostList extends React.PureComponent {
   hendleDeletePost = id => {

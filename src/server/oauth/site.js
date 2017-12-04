@@ -43,6 +43,11 @@ exports.login = [
  */
 exports.logout = (req, res) => {
   req.logout();
+  req.universalCookies.remove('x-token');
+  req.universalCookies.remove('x-refresh-token');
+
+  req.universalCookies.remove('r-token');
+  req.universalCookies.remove('r-refresh-token');
   res.redirect('/');
 };
 

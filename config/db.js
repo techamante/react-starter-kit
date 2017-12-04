@@ -1,11 +1,11 @@
-let DB_TYPE = 'sqlite';
+const DB_TYPE = 'sqlite';
 let client = '';
 let connectionDevelopment = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   multipleStatements: true,
-  charset: 'utf8'
+  charset: 'utf8',
 };
 let connectionProduction = connectionDevelopment;
 let pool = {};
@@ -19,24 +19,24 @@ if (DB_TYPE === 'mysql') {
   // sqlite
   client = 'sqlite3';
   connectionDevelopment = {
-    filename: './dev-db.sqlite3'
+    filename: './dev-db.sqlite3',
   };
   connectionProduction = {
-    filename: './prod-db.sqlite3'
+    filename: './prod-db.sqlite3',
   };
   pool = {
     afterCreate: (conn, cb) => {
       conn.run('PRAGMA foreign_keys = ON', cb);
-    }
+    },
   };
 }
 
 export default {
   dbType: DB_TYPE,
-  client: client,
+  client,
   connection: {
     development: connectionDevelopment,
-    production: connectionProduction
+    production: connectionProduction,
   },
-  pool: pool
+  pool,
 };

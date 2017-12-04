@@ -48,6 +48,7 @@ export default new Feature({
 
     return {
       auth,
+      user: tokenUser,
       User,
     };
   },

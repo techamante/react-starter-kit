@@ -1,14 +1,8 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 import { Route, NavLink } from 'react-router-dom';
+import asyncComponent from '../common/components/asyncComponent';
 import { MenuItem } from '../../modules/common/components/web';
-import Profile from './containers/Profile';
-import Users from './components/Users';
-import UserEdit from './containers/UserEdit';
-import Register from './containers/Register';
-import Login from './containers/Login';
-import ForgotPassword from './containers/ForgotPassword';
-import ResetPassword from './containers/ResetPassword';
 import reducers from './reducers';
 
 import { AuthRoute, AuthNav, AuthLogin, AuthProfile } from './containers/Auth';
@@ -44,13 +38,43 @@ function connectionParam() {
 
 export default new Feature({
   route: [
-    <AuthRoute exact path="/profile" scope="user" component={Profile} />,
-    <AuthRoute exact path="/users" scope="admin" component={Users} />,
-    <Route exact path="/users/:id" component={UserEdit} />,
-    <Route exact path="/register" component={Register} />,
-    <Route exact path="/login" component={Login} />,
-    <Route exact path="/forgot-password" component={ForgotPassword} />,
-    <Route exact path="/reset-password/:token" component={ResetPassword} />,
+    <AuthRoute
+      exact
+      path="/profile"
+      scope="user"
+      component={asyncComponent(() => import('./containers/Profile'))}
+    />,
+    <AuthRoute
+      exact
+      path="/users"
+      scope="admin"
+      component={asyncComponent(() => import('./components/Users'))}
+    />,
+    <Route
+      exact
+      path="/users/:id"
+      component={asyncComponent(() => import('./containers/UserEdit'))}
+    />,
+    <Route
+      exact
+      path="/register"
+      component={asyncComponent(() => import('./containers/Register'))}
+    />,
+    <Route
+      exact
+      path="/login"
+      component={asyncComponent(() => import('./containers/Login'))}
+    />,
+    <Route
+      exact
+      path="/forgot-password"
+      component={asyncComponent(() => import('./containers/ForgotPassword'))}
+    />,
+    <Route
+      exact
+      path="/reset-password/:token"
+      component={asyncComponent(() => import('./containers/ResetPassword'))}
+    />,
   ],
   navItem: [
     <MenuItem key="/users">
@@ -68,7 +92,7 @@ export default new Feature({
     <MenuItem key="login">
       <AuthLogin>
         <span className="nav-link">
-          <a href="/dialog/authorize?redirect_uri=http://localhost:3000/callback&response_type=token&client_id=abc123">
+          <a href="/dialog/authorize?redirect_uri=http://localhost:3000/callback&response_type=token&client_id=abc123&scope=offline_access">
             Sign In
           </a>
         </span>
