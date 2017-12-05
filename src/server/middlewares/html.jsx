@@ -11,6 +11,7 @@ const Html = ({
   helmet,
   token,
   refreshToken,
+  chunks,
 }) => {
   const htmlAttrs = helmet.htmlAttributes.toComponent(); // react-helmet html document tags
   const bodyAttrs = helmet.bodyAttributes.toComponent(); // react-helmet body document tags
@@ -87,6 +88,14 @@ const Html = ({
         />
         {assetMap.vendor && <script src={assetMap.vendor.js} charSet="utf-8" />}
         <script src={assetMap.client.js} charSet="utf-8" />
+        <div
+          dangerouslySetInnerHTML={{
+            __html: chunks
+              .map(chunk => `<script src="/assets/${chunk.file}"></script>`)
+              .join('\n'),
+          }}
+        />
+        <script>window.main()</script>
       </body>
     </html>
   );

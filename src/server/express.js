@@ -43,4 +43,5 @@ export default (app, config) => {
 
   // static files
   app.use(express.static(path.resolve(__dirname, 'public')));
+  app.use('/chunks', express.static(path.resolve(__dirname, 'chunks')));
 };

@@ -5,6 +5,7 @@ import PersistGraphQLPlugin from 'persistgraphql-webpack-plugin';
 import nodeExternals from 'webpack-node-externals';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import { ReactLoadablePlugin } from 'react-loadable/webpack';
 import overrideRules from './lib/overrideRules';
 import pkg from '../package.json';
 
@@ -312,6 +313,9 @@ const clientConfig = {
   },
 
   plugins: [
+    new ReactLoadablePlugin({
+      filename: './build/react-loadable.json',
+    }),
     // Define free variables
     // https://webpack.js.org/plugins/define-plugin/
     new webpack.DefinePlugin({
@@ -465,6 +469,7 @@ const serverConfig = {
 
   externals: [
     './assets.json',
+    './react-loadable.json',
     nodeExternals({
       whitelist: [reStyle, reImage],
     }),

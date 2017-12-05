@@ -1,7 +1,12 @@
 import React from 'react';
 import Loadable from 'react-loadable';
-import { PageLayout } from './web';
 
-const Loading = () => <PageLayout>Loading</PageLayout>;
+const Loading = () => <div>Loading</div>;
 
-export default m => Loadable({ loader: m, loading: Loading });
+export default (m, i) =>
+  Loadable({
+    loader: m,
+    loading: () => <div>Loading</div>,
+    modules: [i],
+    webpack: () => [require.resolveWeak(i)],
+  });

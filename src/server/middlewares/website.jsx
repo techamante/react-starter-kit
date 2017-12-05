@@ -9,13 +9,14 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router';
 import { ServerStyleSheet } from 'styled-components';
 import { LoggingLink } from 'apollo-logger';
+import _ from 'lodash';
 // import { addPersistedQueries } from 'persistgraphql';
 import fs from 'fs';
 import path from 'path';
 import Helmet from 'react-helmet';
 import url from 'url';
-import flushChunks from 'webpack-flush-chunks';
-import { flushModuleIds } from 'react-universal-component/server';
+import Loadable from 'react-loadable';
+import { getBundles } from 'react-loadable/webpack';
 // import { AppRegistry } from 'react-native';
 
 import createApolloClient from '../../common/createApolloClient';
@@ -25,6 +26,7 @@ import Routes from '../../client/app/Routes';
 import modules from '../modules';
 import settings from '../../../settings';
 import assets from './assets.json'; // eslint-disable-line import/no-unresolved
+import stats from './react-loadable.json';
 
 const assetMap = assets;
 
@@ -67,20 +69,21 @@ const renderServerSide = async (req, res) => {
 
   const context = {};
   const clientModules = require('../../client/modules').default;
+
+  const bundles = [];
+  await Loadable.preloadAll();
   const App = clientModules.getWrappedRoot(
-    <Provider store={store}>
-      <ApolloProvider client={client}>
-        <StaticRouter location={req.url} context={context}>
-          {Routes}
-        </StaticRouter>
-      </ApolloProvider>
-    </Provider>,
+    <Loadable.Capture report={moduleName => bundles.push(moduleName)}>
+      <Provider store={store}>
+        <ApolloProvider client={client}>
+          <StaticRouter location={req.url} context={context}>
+            {Routes}
+          </StaticRouter>
+        </ApolloProvider>
+      </Provider>
+    </Loadable.Capture>,
     req,
   );
-
-  const { js, styles } = flushChunks(webpackStats, {
-    moduleIds: flushModuleIds(),
-  });
 
   await getDataFromTree(App);
 
@@ -92,6 +95,7 @@ const renderServerSide = async (req, res) => {
 
   const sheet = new ServerStyleSheet();
   const html = ReactDOMServer.renderToString(sheet.collectStyles(App));
+  const chunks = getBundles(stats, _.uniq(bundles));
   const css = sheet
     .getStyleElement()
     .map((el, idx) => React.cloneElement(el, { key: idx }));
@@ -119,6 +123,7 @@ const renderServerSide = async (req, res) => {
         helmet={helmet}
         token={token}
         refreshToken={refreshToken}
+        chunks={chunks}
       />
     );
     res.send(`<!doctype html>\n${ReactDOMServer.renderToStaticMarkup(page)}`);
