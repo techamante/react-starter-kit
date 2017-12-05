@@ -1,9 +1,9 @@
-import { Model } from 'mongoose-model-decorators';
-
+import { Model } from 'mongoose';
+import { withModel } from '../../../helpers/decorators';
 import TrainingVideoSchema from './TrainingVideo';
 
-@Model('courses')
-export default class Course {
+@withModel('courses')
+export default class Course extends Model {
   static schema = {
     title: String,
     description: String,

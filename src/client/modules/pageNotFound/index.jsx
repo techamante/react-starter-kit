@@ -5,5 +5,5 @@ import PageNotFound from './containers/PageNotFound';
 import Feature from '../connector';
 
 export default new Feature({
-  route: <Route component={PageNotFound} />
+  route: <Route component={PageNotFound} />,
 });

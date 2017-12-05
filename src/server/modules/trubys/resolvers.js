@@ -1,7 +1,7 @@
 export default () => ({
   Query: {
-    async curriculumById(obj, { id }, { Curriculum }) {
-      const curriculum = await Curriculum.findByIdWithCourses(id);
+    async curriculumById(obj, { id }, { CurriculumRepo }) {
+      const curriculum = await CurriculumRepo.findByIdWithCourses(id);
       return curriculum;
     },
   },

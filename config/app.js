@@ -1,5 +1,5 @@
 export default {
-  name: 'Apollo Starter Kit',
+  name: `Truby's`,
   logging: {
     debugSQL: false,
     apolloLogging: false,

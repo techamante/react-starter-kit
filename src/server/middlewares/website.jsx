@@ -14,6 +14,8 @@ import fs from 'fs';
 import path from 'path';
 import Helmet from 'react-helmet';
 import url from 'url';
+import flushChunks from 'webpack-flush-chunks';
+import { flushModuleIds } from 'react-universal-component/server';
 // import { AppRegistry } from 'react-native';
 
 import createApolloClient from '../../common/createApolloClient';
@@ -75,6 +77,10 @@ const renderServerSide = async (req, res) => {
     </Provider>,
     req,
   );
+
+  const { js, styles } = flushChunks(webpackStats, {
+    moduleIds: flushModuleIds(),
+  });
 
   await getDataFromTree(App);
 

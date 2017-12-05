@@ -21,6 +21,7 @@ export default class {
       createFetchOptions,
       stylesInsert,
       rootComponentFactory,
+      modalRoute,
     },
     ...features
   ) {
@@ -38,10 +39,17 @@ export default class {
       arguments,
       arg => arg.rootComponentFactory,
     );
+    this.modalRoute = combine(arguments, arg => arg.modalRoute);
   }
 
   get routes() {
     return this.route.map((component, idx) =>
+      React.cloneElement(component, { key: idx + this.route.length }),
+    );
+  }
+
+  get modalRoutes() {
+    return this.modalRoute.map((component, idx) =>
       React.cloneElement(component, { key: idx + this.route.length }),
     );
   }

@@ -1,11 +1,11 @@
 // @flow
 
 import { Schema, Model } from 'mongoose';
-import { Model as model } from 'mongoose-model-decorators';
+import { withModel } from '../../../helpers/decorators';
 import Course from './Course';
 
 /* flow-ignore */
-@model('curriculums')
+@withModel('curriculums')
 /* flow-ignore */
 export default class Curriculum extends Model {
   static schema = {
@@ -17,9 +17,5 @@ export default class Curriculum extends Model {
   async addCourse(course: Course) {
     this.courses.push(course);
     await this.save();
-  }
-
-  static async findByIdWithCourses(id: string): Promise<Course> {
-    return this.findById(id).populate('courses');
   }
 }

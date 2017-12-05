@@ -35,7 +35,7 @@ const addGraphQLSubscriptions = httpServer => {
   if (module.hot && module.hot.data) {
     const prevServer = module.hot.data.subscriptionServer;
     if (prevServer && prevServer.wsServer) {
-      console.log.debug('Reloading the subscription server.');
+      console.debug('Reloading the subscription server.');
       prevServer.wsServer.close(() => {
         addSubscriptions(httpServer);
       });

@@ -1,9 +1,7 @@
 import React from 'react';
 import Loadable from 'react-loadable';
+import { PageLayout } from './web';
 
-const Loading = () => <div>Loading</div>;
+const Loading = () => <PageLayout>Loading</PageLayout>;
 
-export default m => {
-  console.log(m);
-  return Loadable({ loader: m, loading: Loading });
-};
+export default m => Loadable({ loader: m, loading: Loading });

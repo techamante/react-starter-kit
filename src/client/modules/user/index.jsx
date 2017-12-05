@@ -1,6 +1,6 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
-import { Route, NavLink } from 'react-router-dom';
+import { Route, NavLink, Redirect } from 'react-router-dom';
 import asyncComponent from '../common/components/asyncComponent';
 import { MenuItem } from '../../modules/common/components/web';
 import reducers from './reducers';
@@ -65,6 +65,7 @@ export default new Feature({
       path="/login"
       component={asyncComponent(() => import('./containers/Login'))}
     />,
+
     <Route
       exact
       path="/forgot-password"

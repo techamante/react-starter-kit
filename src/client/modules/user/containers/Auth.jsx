@@ -161,6 +161,21 @@ const AuthRoute = withCookies(
   ),
 );
 
+const LoggedInRoute = withCookies(
+  ({ component: Component, else: Else, cookies, scope, ...rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        checkAuth(cookies, scope) ? (
+          <Component {...props} />
+        ) : (
+          <Else {...props} />
+        )
+      }
+    />
+  ),
+);
+
 AuthRoute.propTypes = {
   component: PropTypes.func,
   cookies: PropTypes.instanceOf(Cookies),
@@ -170,3 +185,4 @@ export { AuthNav };
 export { AuthProfile };
 export { AuthLoginWithApollo as AuthLogin };
 export { AuthRoute };
+export { LoggedInRoute };

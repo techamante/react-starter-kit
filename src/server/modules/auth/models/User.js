@@ -1,7 +1,8 @@
 import { Model } from 'mongoose';
-import { Model as model } from 'mongoose-model-decorators';
+import { withModel } from '../../../helpers/decorators';
 import bcrypt from 'bcryptjs';
-@model('users')
+
+@withModel('users')
 export default class User extends Model {
   static schema = {
     username: { type: String, required: true, index: true },
