@@ -1,0 +1,30 @@
+extend type Query {
+  # Posts pagination query
+  posts(limit: Int, after: Int): Posts
+  # Post
+  post(id: Int!): Post
+}
+
+extend type Mutation {
+  # Create new post
+  addPost(input: AddPostInput!): Post
+  # Delete a post
+  deletePost(id: Int!): Post
+  # Edit a post
+  editPost(input: EditPostInput!): Post
+  # Add comment to post
+  addComment(input: AddCommentInput!): Comment
+  # Delete a comment
+  deleteComment(input: DeleteCommentInput!): Comment
+  # Edit a comment
+  editComment(input: EditCommentInput!): Comment
+}
+
+extend type Subscription {
+  # Subscription for when editing a post
+  postUpdated(id: Int!): Post
+  # Subscription for post list
+  postsUpdated(endCursor: Int!): UpdatePostPayload
+  # Subscription for comments
+  commentUpdated(postId: Int!): UpdateCommentPayload
+}

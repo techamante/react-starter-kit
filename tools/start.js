@@ -183,6 +183,7 @@ async function start() {
       .catch(error => {
         if (['abort', 'fail'].includes(app.hot.status())) {
           console.warn(`${hmrPrefix}Cannot apply update.`);
+          app.subscriptionServer.close();
           delete require.cache[require.resolve('../build/server')];
           // eslint-disable-next-line global-require, import/no-unresolved
           app = require('../build/server').default;

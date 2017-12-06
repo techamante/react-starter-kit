@@ -14,19 +14,10 @@ window.main = () => {
   });
 
   let frontendReloadCount = 0;
-  // AppRegistry.runApplication('App', {
-  //   initialProps: { key: frontendReloadCount },
-  //   rootTag: root
-  // });
 
   if (__DEV__) {
     if (module.hot) {
       module.hot.accept();
-
-      // module.hot.accept('backend_reload', () => {
-      //   log.debug('Reloading front-end');
-      //   window.location.reload();
-      // });
 
       module.hot.accept('./app/Main', () => {
         try {

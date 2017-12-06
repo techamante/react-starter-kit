@@ -28,7 +28,6 @@ global.navigator = global.navigator || {};
 global.navigator.userAgent = global.navigator.userAgent || 'all';
 
 const app = express();
-mongooseConfig(config);
 //
 // Setup Express Pipeline
 // -----------------------------------------------------------------------------
@@ -90,34 +89,39 @@ if (!module.hot) {
 // Hot Module Replacement
 // -----------------------------------------------------------------------------
 
-function startServer() {
-  const httpServer = http.createServer().listen(3002, error => {
-    if (error) {
-      console.error(error);
-    } else {
-      addGraphQLSubscriptions(httpServer);
-      const address = httpServer.address();
-      console.info(
-        `==> 🌎 Listening on ${address.port}. Open up http://localhost:${
-          address.port
-        }/ in your browser.`,
-      );
-    }
-  });
+// let httpServer;
 
-  // Hot Module Replacement API
-  if (module.hot) {
-    // Hot reload of entry module (self). It will be restart http-server.
-    module.hot.dispose(() => {
-      console.log('Disposing entry module...');
-      httpServer.close();
-    });
-  }
-}
+// if (module.hot) {
+//   app.hot = module.hot;
+//   httpServer = http.createServer().listen(3002);
+//   addGraphQLSubscriptions(httpServer);
+
+//   module.hot.dispose(() => {
+//     try {
+//       if (httpServer) {
+//         httpServer.close();
+//       }
+//     } catch (error) {
+//       log(error.stack);
+//     }
+//   });
+//   module.hot.accept(['./middlewares/website', './graphql/graphqlMiddleware']);
+//   module.hot.accept(['./graphql/subscriptions'], () => {
+//     try {
+//       addGraphQLSubscriptions(server);
+//     } catch (error) {
+//       log(error.stack);
+//     }
+//   });
+
+//   module.hot.accept();
+// }
 
 if (module.hot) {
   app.hot = module.hot;
-  startServer();
+  const httpServer = http.createServer().listen(3002);
+  addGraphQLSubscriptions(httpServer);
+  app.subscriptionServer = httpServer;
 }
 
 export default app;

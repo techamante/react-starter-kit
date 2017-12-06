@@ -1,11 +1,11 @@
 import { Model } from 'mongoose';
-import { withModel } from '../../../helpers/decorators';
 import bcrypt from 'bcryptjs';
+import { withModel } from '../../../helpers/decorators';
 
 @withModel('users')
 export default class User extends Model {
   static schema = {
-    username: { type: String, required: true, index: true },
+    username: { type: String, index: true },
     role: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     password: String,
@@ -38,9 +38,5 @@ export default class User extends Model {
   async register() {
     this.password = await bcrypt.hash(this.password, 12);
     return this.save();
-  }
-
-  static async getUserByUserName(userName) {
-    return this.findOne({ userName });
   }
 }

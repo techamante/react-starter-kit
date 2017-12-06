@@ -1,0 +1,82 @@
+# Post
+type Post {
+  id: Int!
+  title: String!
+  content: String!
+  comments: [Comment]
+}
+
+# Comment
+type Comment {
+  id: String!
+  content: String!
+}
+
+# Edges for Posts
+type PostEdges {
+  node: Post
+  cursor: Int
+}
+
+# PageInfo for Posts
+type PostPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
+# Posts relay-style pagination query
+type Posts {
+  totalCount: Int
+  edges: [PostEdges]
+  pageInfo: PostPageInfo
+}
+
+# Payload for postsUpdated Subscription
+type UpdatePostPayload {
+  mutation: String!
+  id: Int!
+  node: Post
+}
+
+# Payload for commentUpdated Subscription
+type UpdateCommentPayload {
+  mutation: String!
+  id: Int
+  postId: Int!
+  node: Comment
+}
+
+# Input for addPost Mutation
+input AddPostInput {
+  title: String!
+  content: String!
+}
+
+# Input for editPost Mutation
+input EditPostInput {
+  id: Int!
+  title: String!
+  content: String!
+}
+
+# Input for addComment Mutation
+input AddCommentInput {
+  content: String!
+  # Needed for commentUpdated Subscription filter
+  postId: Int!
+}
+
+# Input for editComment Mutation
+input DeleteCommentInput {
+  id: String!
+  # Needed for commentUpdated Subscription filter
+  postId: Int!
+}
+
+# Input for deleteComment Mutation
+input EditCommentInput {
+  id: String!
+  content: String!
+  # Needed for commentUpdated Subscription filter
+  postId: Int!
+}

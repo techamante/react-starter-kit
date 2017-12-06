@@ -4,17 +4,7 @@ import pageNotFound from './pageNotFound';
 import './favicon';
 import Feature from './connector';
 import ui from './ui-bootstrap';
-import curriculums from './curriculums';
-import courses from './courses';
-import videos from './videos';
 import landing from './landing';
+import post from './post';
 
-export default new Feature(
-  landing,
-  curriculums,
-  courses,
-  videos,
-  user,
-  pageNotFound,
-  ui,
-);
+export default new Feature(landing, post, user, pageNotFound, ui);
